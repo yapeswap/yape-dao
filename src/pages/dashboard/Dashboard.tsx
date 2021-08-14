@@ -22,6 +22,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Allocation } from "../../components/contracts/vision-emitter/Allocation";
+import { useBlockNumber } from "../../providers/BlockNumberProvider";
 
 const Dashboard = () => {
   const { addToast } = useToasts();
@@ -42,6 +43,7 @@ const Dashboard = () => {
   });
 
   const { ipfs } = useIPFS();
+  const { blockNumber } = useBlockNumber();
   const [metadata, setMetadata] = useState<ProjectMetadata>();
   const [emissionStarted, setEmissionStarted] = useState<number>();
   const [mintable, setMintable] = useState<BigNumber>();
@@ -49,6 +51,7 @@ const Dashboard = () => {
   const [baseCurrencySymbol, setBaseCurrencySymbol] = useState<string>();
   const [visionSupply, setVisionSupply] = useState<BigNumber>();
   const [rightSupply, setRightSupply] = useState<BigNumber>();
+  const [remainingTime, setRemainingTime] = useState<number>();
 
   useEffect(() => {
     if (daoId === 0) {
@@ -117,6 +120,12 @@ const Dashboard = () => {
     }
   }, [workhardCtx, daoId, ipfs]);
 
+  useEffect(() => {
+    setRemainingTime(
+      Math.max(1629131191 - Math.floor(Date.now() / 1000), 0) / 3600
+    );
+  }, [blockNumber]);
+
   const poolName = (address: string): string => {
     if (workhardCtx) {
       if (
@@ -153,6 +162,13 @@ const Dashboard = () => {
             What is <b>{metadata?.name}?</b>
           </h2>
           <p>{metadata?.description}</p>
+          <p>
+            <strong>
+              {remainingTime === 0
+                ? `Emission started!`
+                : `Emission starts in ${remainingTime?.toFixed(1)} hours!`}
+            </strong>
+          </p>
         </Col>
       </Row>
       <hr />

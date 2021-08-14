@@ -112,7 +112,7 @@ export const AllocationChart: React.FC<AllocationChartProps> = ({
         textAnchor={x > cx ? "start" : "end"}
         dominantBaseline="central"
         font-weight="bold"
-        fill={vars.primary}
+        fill={vars.orangeRed}
       >
         {data[index].title}
       </text>
