@@ -7,7 +7,7 @@ import NavBar from "../components/nav/NavBar";
 import Footer from "../components/Footer";
 import { Menu } from "../contexts/menu";
 import { isOnTargetNetwork, getTargetNetworkName } from "../utils/utils";
-import { FatherSays } from "../components/views/FatherSays";
+import { ApeSays } from "../components/views/ApeSays";
 
 export type PageProps = React.ComponentProps<any>;
 
@@ -89,9 +89,9 @@ const Page = (props: React.ComponentProps<any>) => {
       <NavBar menus={menus} secondary={secondary} adminMenus={adminMenus} />
       <Row>
         <Container>
-          {!active && <FatherSays say={"How about connect wallet ser?"} />}
+          {!active && <ApeSays say={"Ape Connect Strong"} />}
           {active && !onTargetNetwork && (
-            <FatherSays say={`You're not on ${targetNetwork} ser?`} />
+            <ApeSays say={`You're not on ${targetNetwork} ser?`} />
           )}
           {active && onTargetNetwork && props.children}
         </Container>

@@ -17,7 +17,7 @@ import { getAddress } from "ethers/lib/utils";
 import { useIPFS } from "../../providers/IPFSProvider";
 import { OverlayTooltip } from "../../components/OverlayTooltip";
 import { Erc20Balance } from "../../components/contracts/erc20/Erc20Balance";
-import { FatherSays } from "../../components/views/FatherSays";
+import { ApeSays } from "../../components/views/ApeSays";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -136,7 +136,7 @@ const Dashboard = () => {
 
   const fetching = (
     <Page>
-      <FatherSays say={`Loading...`} />
+      <ApeSays say={`Loading...`} />
     </Page>
   );
   const fetched = (

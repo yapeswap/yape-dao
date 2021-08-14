@@ -3,7 +3,7 @@ import Page from "../../layouts/Page";
 import { Col, Row, Nav, Tab, Button, Container } from "react-bootstrap";
 import { useHistory, useParams } from "react-router-dom";
 import { useWorkhard } from "../../providers/WorkhardProvider";
-import { FatherSays } from "../../components/views/FatherSays";
+import { ApeSays } from "../../components/views/ApeSays";
 import { SetEmission } from "../../components/contracts/vision-emitter/SetEmission";
 import { MultisigProposal } from "./tabs/MultisigProposal";
 import { getNetworkName } from "@workhard/protocol";
@@ -22,7 +22,7 @@ export const MultisigAdmin = () => {
 
   const fetching = (
     <Page>
-      <FatherSays say={`Loading...`} />
+      <ApeSays say={`Loading...`} />
     </Page>
   );
 

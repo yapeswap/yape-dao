@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Image, Container, Col, Row } from "react-bootstrap";
 
-export interface FatherSaysProps {
+export interface ApeSaysProps {
   say: string;
 }
 
-export const FatherSays: React.FC<FatherSaysProps> = ({ say }) => {
+export const ApeSays: React.FC<ApeSaysProps> = ({ say }) => {
   const col = useRef<HTMLDivElement>(null);
   const imageCol = useRef<HTMLDivElement>(null);
   const [fontSize, setFontSize] = useState<string>("100%");
@@ -24,20 +24,20 @@ export const FatherSays: React.FC<FatherSaysProps> = ({ say }) => {
         <Col ref={col} md={12} style={{ height: "10vh" }}></Col>
         <Col ref={imageCol} md={6}>
           <Image
-            src={process.env.PUBLIC_URL + "/images/father-says.png"}
+            src={process.env.PUBLIC_URL + "/images/ape-says.png"}
             style={{ width: "100%", padding: "0px" }}
           />
           <Container
             style={{
               position: "absolute",
-              top: "5%",
-              left: "10%",
-              width: "20%",
+              top: "10%",
+              left: "7%",
+              width: "25%",
               fontSize,
               lineHeight: "100%",
             }}
           >
-            <p>{say}</p>
+            <p style={{ fontSize: "16px", fontWeight: 700 }}>{say}</p>
           </Container>
         </Col>
       </Row>
