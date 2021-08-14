@@ -124,12 +124,13 @@ export const isOnTargetNetwork = (chainId?: number): boolean => {
 };
 
 export const getTargetNetworkName = (): MyNetwork | undefined => {
-  if (process.env.REACT_APP_NETWORK)
-    return process.env.REACT_APP_NETWORK as MyNetwork;
-  const hostname = window.location.hostname;
-  if (hostname.includes("localhost")) return undefined;
-  else if (hostname === "app.workhard.finance") return "mainnet";
-  else return "rinkeby";
+  // if (process.env.REACT_APP_NETWORK)
+  //   return process.env.REACT_APP_NETWORK as MyNetwork;
+  // const hostname = window.location.hostname;
+  // if (hostname.includes("localhost")) return undefined;
+  // else if (hostname === "app.workhard.finance") return "mainnet";
+  // else return "rinkeby";
+  return "mainnet";
 };
 
 export const getVariantForProgressBar = (percent: number) => {
