@@ -105,6 +105,7 @@ const Wallet = (props: React.ComponentProps<any>) => {
 
   // register default assets.
   // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-747.md for metamask
+  /**
   try {
     if (!userStore.tokenAdded && library?.provider.isMetaMask) {
       ctx?.workhard.getMasterDAO().then((masterDao) => {
@@ -150,6 +151,7 @@ const Wallet = (props: React.ComponentProps<any>) => {
       });
     }
   } catch (e) {}
+  */
   return (
     <div {...props}>
       <Button variant={"warning"} onClick={active ? handleShow : handleShow}>
