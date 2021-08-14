@@ -1,7 +1,7 @@
 {
-  "appName": "Your App Name",
-  "daoId": 0,
-  "pool2Factory": "0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac",
+  "appName": "Yapeswap",
+  "daoId": 3,
+  "pool2Factory": "0x46aDc1C052Fafd590F56C42e379d7d16622835a2",
   "projects": {
     "banned": [],
     "featured": []
