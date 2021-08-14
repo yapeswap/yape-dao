@@ -36,14 +36,14 @@ const Page = (props: React.ComponentProps<any>) => {
         name: "Gov",
         url: "/gov",
       },
-      {
-        name: "Store",
-        url: "/store",
-      },
-      {
-        name: "DAOs",
-        url: "/dao",
-      },
+      // {
+      //   name: "Store",
+      //   url: "/store",
+      // },
+      // {
+      //   name: "DAOs",
+      //   url: "/dao",
+      // },
     ];
     adminMenus = [
       {

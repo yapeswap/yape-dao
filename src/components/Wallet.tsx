@@ -152,11 +152,7 @@ const Wallet = (props: React.ComponentProps<any>) => {
   } catch (e) {}
   return (
     <div {...props}>
-      <Button
-        variant={active ? "outline-light" : "light"}
-        className={active ? "text-white" : "text-primary"}
-        onClick={active ? handleShow : handleShow}
-      >
+      <Button variant={"warning"} onClick={active ? handleShow : handleShow}>
         {active ? `${account?.slice(0, 6)}...${account?.slice(-4)}` : "Connect"}
       </Button>
       <Modal show={show} onHide={handleClose}>

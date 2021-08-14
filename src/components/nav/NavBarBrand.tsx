@@ -7,7 +7,7 @@ import { WHFAppConfig } from "../../types/config";
 const NavBarBrand = () => {
   const title = ((config as any) as WHFAppConfig).appName;
   return (
-    <Navbar.Brand as={Link} to={`/`}>
+    <Navbar.Brand as={Link} to={`/`} className={"text-primary"}>
       <strong>{title}</strong>
     </Navbar.Brand>
   );

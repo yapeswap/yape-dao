@@ -152,11 +152,6 @@ export const WorkhardProvider: React.FC = ({ children }) => {
   }, [active, library, chainId, daoId]);
 
   return (
-    <WorkhardCtx.Provider value={context}>
-      {context?.daoId !== 0 && (
-        <Helmet>{context && <title>{context?.metadata.daoName}</title>}</Helmet>
-      )}
-      {children}
-    </WorkhardCtx.Provider>
+    <WorkhardCtx.Provider value={context}>{children}</WorkhardCtx.Provider>
   );
 };

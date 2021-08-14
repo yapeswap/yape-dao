@@ -131,25 +131,14 @@ const Mine = observer(() => {
 
   return (
     <Page>
-      <TitleButSer link="https://whf.gitbook.io/docs/mine#main-pools">
-        Main pools
+      <TitleButSer
+        link="https://whf.gitbook.io/docs/mine#main-pools"
+        hint={
+          "Got some hard earned cYAPE wages? Prove your dedication and belief by mining your project's on-chain stock option, or LP YAPE!"
+        }
+      >
+        Featured mining pools
       </TitleButSer>
-      <p>
-        Got some hard earned{" "}
-        {workhardCtx && workhardCtx.daoId !== 0
-          ? `${workhardCtx.metadata.commitName}(${workhardCtx.metadata.commitSymbol})`
-          : "$COMMIT"}{" "}
-        wages? Prove your dedication and belief by mining your project's
-        on-chain stock option,{" "}
-        {workhardCtx && workhardCtx.daoId !== 0
-          ? `${workhardCtx.metadata.visionName}(${workhardCtx.metadata.visionSymbol})`
-          : "$VISION"}{" "}
-        or LP{" "}
-        {workhardCtx && workhardCtx.daoId !== 0
-          ? workhardCtx.metadata.visionSymbol
-          : "$VISION"}
-        !
-      </p>
       <Row>
         <Col md={6}>
           {mineStore.pools &&
@@ -224,7 +213,7 @@ const Mine = observer(() => {
           <br />
           <br />
           <TitleButSer link="https://whf.gitbook.io/docs/mine#sub-pools">
-            Sub pools
+            YAPE mining pools!
           </TitleButSer>
           <Row>
             {subPools.map((subPool) => (

@@ -72,29 +72,25 @@ export const MiningPool: React.FC<MiningPoolProps> = (props) => {
 
   useEffect(() => {
     if (workhardCtx && baseToken) {
-      if (tokenSymbol === "UNI-V2") {
-        Promise.all([
-          UniswapV2Pair__factory.connect(
-            baseToken,
-            workhardCtx.web3.library
-          ).token0(),
-          UniswapV2Pair__factory.connect(
-            baseToken,
-            workhardCtx.web3.library
-          ).token1(),
-        ]).then(([token0, token1]) => {
-          setLogos([token0, token1].map(getTokenLogo));
-        });
-      } else {
-        setLogos([getTokenLogo(baseToken)]);
-      }
+      Promise.all([
+        UniswapV2Pair__factory.connect(
+          baseToken,
+          workhardCtx.web3.library
+        ).token0(),
+        UniswapV2Pair__factory.connect(
+          baseToken,
+          workhardCtx.web3.library
+        ).token1(),
+      ]).then(([token0, token1]) => {
+        setLogos([token0, token1].map(getTokenLogo));
+      });
     }
   }, [workhardCtx, tokenSymbol]);
   if (poolType === PoolType.ERC20BurnV1) {
     return (
       <ERC20BurnMiningV1
         poolIdx={props.poolIdx}
-        title={props.title || `Burn ${tokenSymbol || baseToken}`}
+        title={props.title || `${tokenSymbol || baseToken}`}
         tokenName={tokenSymbol || baseToken}
         poolAddress={props.poolAddress}
         totalEmission={props.totalEmission}
@@ -108,7 +104,7 @@ export const MiningPool: React.FC<MiningPoolProps> = (props) => {
     return (
       <ERC20StakeMiningV1
         poolIdx={props.poolIdx}
-        title={props.title || `Stake ${tokenSymbol || baseToken}`}
+        title={props.title || `${tokenSymbol || baseToken}`}
         tokenName={tokenSymbol || baseToken}
         poolAddress={props.poolAddress}
         totalEmission={props.totalEmission}

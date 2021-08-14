@@ -8,7 +8,93 @@
 //
 // Color system
 //
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@500;700&family=Lobster+Two:wght@400;700&display=swap");
+@import "~bootswatch/dist/litera/variables";
+$red-salsa: #f94144 !default;
+$orange-red: #f3722c !default;
+$yellow-orange: #f8961e !default;
+$malze-crayola: #f9c74f !default;
+$pistachio: #90be6d !default;
+$zomp: #43aa8b !default;
+$queen-blue: #577590 !default;
 
-@import "~bootswatch/dist/united/variables";
+$primary: $red-salsa;
+$white: $malze-crayola;
+$font-family-sans-serif: "Inter", sans-serif;
+$font-family-serif: "Inter", sans-serif;
+// $font-family-serif: Georgia, Cambria, "Times New Roman", Times, serif !default;
+
+$btn-border-radius: 1.078em !default;
+$btn-border-radius-lg: 2.688em !default;
+$btn-border-radius-sm: 0.844em !default;
+
+$bg1: #f9c74f;
+$bg2: #ffe76f;
+$bg3: #fff87f;
+$bg4: #fffa9f;
+$bg5: #ffffbf;
+
 @import "~bootstrap/scss/bootstrap";
-@import "~bootswatch/dist/united/bootswatch";
+@import "~bootswatch/dist/litera/bootswatch";
+
+body {
+  color: $red-salsa;
+  font-family: "Inter";
+}
+
+.btn {
+  font-family: "Inter";
+  font-weight: 500;
+  font-size: 16px;
+  color: white;
+}
+
+.text-white {
+  color: white;
+}
+
+.card {
+  background-color: $bg2;
+  border-radius: 1.078em;
+  border-color: transparent;
+  margin: 0.5em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Lobster Two";
+  color: $primary;
+}
+
+p {
+  color: $red-salsa;
+}
+
+.table {
+  color: $primary;
+}
+
+.input-group {
+  color: $yellow-orange;
+}
+
+.input-group-text {
+  border-radius: 0.5em;
+  border-color: transparent;
+  color: $yellow-orange;
+  background-color: $bg3;
+}
+
+// .btn-info {
+//   color: white;
+//   font-weight: 500;
+//   font-size: 16px;
+// }
+
+// .btn-primary {
+//   color: white;
+// }

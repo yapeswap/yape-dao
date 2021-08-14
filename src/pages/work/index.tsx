@@ -14,28 +14,26 @@ const Work: React.FC = () => {
 
   return (
     <Page>
-      <TitleButSer link="https://whf.gitbook.io/docs/work#projects">
+      <TitleButSer
+        link="https://whf.gitbook.io/docs/work#projects"
+        hint={`Put your back into it fellow Worker! Earn some honest ${
+          workhardCtx && workhardCtx.daoId !== 0
+            ? `${workhardCtx.metadata.commitName}(COMMIT)`
+            : `$COMMIT`
+        } wages from a JOB`}
+      >
         Projects
-        <OverlayTooltip
-          tip={`Put your back into it fellow Worker! Earn some honest ${
-            workhardCtx && workhardCtx.daoId !== 0
-              ? `${workhardCtx.metadata.commitName}(COMMIT)`
-              : `$COMMIT`
-          } wages from a JOB`}
-          text="❔"
-        />
       </TitleButSer>
       <br />
       <ContributionBoard />
       <hr />
-      <TitleButSer link="https://whf.gitbook.io/docs/work#stable-reserve">
+      <TitleButSer
+        link="https://whf.gitbook.io/docs/work#stable-reserve"
+        hint={
+          "Monetize your commitment here! You can exchange your commitment to a stable coin or buy them at a premium instead of working!"
+        }
+      >
         Stable Reserve
-        <OverlayTooltip
-          tip={
-            "Monetize your commitment here! You can exchange your commitment to a stable coin or buy them at a premium instead of working!"
-          }
-          text="❔"
-        />
       </TitleButSer>
       <StableReserve />
       <hr />

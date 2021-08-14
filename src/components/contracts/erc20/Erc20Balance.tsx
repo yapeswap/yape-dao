@@ -7,6 +7,8 @@ import { OverlayTooltip } from "../../OverlayTooltip";
 import { useBlockNumber } from "../../../providers/BlockNumberProvider";
 import { ERC20__factory } from "@workhard/protocol";
 import { useToasts } from "react-toast-notifications";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
 export interface Erc20BalanceProps {
   title?: string;
@@ -40,17 +42,21 @@ export const Erc20Balance: React.FC<Erc20BalanceProps> = ({
 
   return (
     <Card>
+      {description && (
+        <div style={{ position: "absolute", right: "1rem", top: "1rem" }}>
+          <OverlayTooltip tip={description}>
+            <FontAwesomeIcon
+              icon={faInfoCircle}
+              style={{ cursor: "pointer" }}
+            />
+          </OverlayTooltip>
+        </div>
+      )}
       <Card.Body>
-        {title && (
-          <Card.Title>
-            {title}
-            {description && <OverlayTooltip tip={description} text={`❔`} />}
-          </Card.Title>
-        )}
-
+        {title && <Card.Title>{title}</Card.Title>}
         <Card.Text style={{ fontSize: "3rem" }}>
           {bigNumToFixed(balance || 0)}
-          <span style={{ fontSize: "1rem" }}> {`$${symbolAlt || symbol}`}</span>
+          <span style={{ fontSize: "1rem" }}> {symbolAlt || symbol}</span>
         </Card.Text>
         {children}
       </Card.Body>

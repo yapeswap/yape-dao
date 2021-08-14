@@ -142,26 +142,17 @@ const Dashboard = () => {
   const fetched = (
     <Page>
       <Row>
-        <Col md={5}>
+        <Col md={4}>
           <Image
-            src={
-              metadata
-                ? uriToURL(metadata.image)
-                : process.env.PUBLIC_URL + "/images/daily-life.jpeg"
-            }
-            style={{ maxWidth: "100%" }}
+            src={process.env.PUBLIC_URL + "/images/YAPE-TOKEN.png"}
+            style={{ maxWidth: "70%" }}
           />
         </Col>
-        <Col md={7}>
+        <Col md={8}>
           <h2>
             What is <b>{metadata?.name}?</b>
           </h2>
           <p>{metadata?.description}</p>
-          {(daoId || 0) !== 0 && metadata?.url && (
-            <Button as={"a"} href={metadata.url} target="_blank" variant="info">
-              Go to app
-            </Button>
-          )}
         </Col>
       </Row>
       <hr />
@@ -169,33 +160,39 @@ const Dashboard = () => {
         <b>Your balance</b>
       </h2>
       <Row>
-        <Col md={4}>
+        <Col md={4} style={{ padding: 0 }}>
           <Erc20Balance
-            title={workhardCtx?.metadata.commitName || "COMMIT Token"}
-            address={workhardCtx?.dao.commit.address}
-            symbolAlt={workhardCtx?.metadata.commitSymbol || "COMMIT"}
+            title={workhardCtx?.metadata.commitSymbol || "COMMIT"}
+            description={
+              "Show your true, long-term belief in your project. Burn cYAPE to continuously mine YAPE."
+            }
+            symbolAlt={" "}
           >
             <Button as={Link} to={"work"}>
               Go to work
             </Button>
           </Erc20Balance>
         </Col>
-        <Col md={4}>
+        <Col md={4} style={{ padding: 0 }}>
           <Erc20Balance
-            title={workhardCtx?.metadata.visionName || "VISION Token"}
+            title={workhardCtx?.metadata.visionSymbol || "VISION"}
+            description={"Yapeswap DAO token"}
             address={workhardCtx?.dao.vision.address}
-            symbolAlt={workhardCtx?.metadata.visionSymbol || "VISION"}
+            symbolAlt={" "}
           >
             <Button as={Link} to={"mine"}>
               Go to mine
             </Button>
           </Erc20Balance>
         </Col>
-        <Col md={4}>
+        <Col md={4} style={{ padding: 0 }}>
           <Erc20Balance
-            title={workhardCtx?.metadata.rightName || "RIGHT Token"}
+            title={workhardCtx?.metadata.rightSymbol || "RIGHT"}
+            description={
+              "Lock your YAPE and get veYAPE. You can get voting powers and protocol revenues."
+            }
             address={workhardCtx?.dao.right.address}
-            symbolAlt={workhardCtx?.metadata.rightSymbol || "RIGHT"}
+            symbolAlt={" "}
           >
             <Button as={Link} to={"gov"}>
               Go to lock ${workhardCtx?.metadata.visionSymbol}
@@ -231,11 +228,11 @@ const Dashboard = () => {
         <b>Statistics</b>
       </h2>
       <Row>
-        <Col md={3}>
-          <Card border={"primary"}>
+        <Col md={3} style={{ padding: 0 }}>
+          <Card>
             <Card.Body>
               <Card.Title className={"text-primary"}>
-                <strong>Mintable COMMIT</strong>
+                Mintable COMMIT
                 <OverlayTooltip
                   tip={`Governance can mint more ${
                     workhardCtx?.metadata.commitSymbol || "COMMIT"
@@ -253,17 +250,15 @@ const Dashboard = () => {
             </Card.Body>
           </Card>
         </Col>
-        <Col md={3}>
-          <Card border={"primary"}>
+        <Col md={3} style={{ padding: 0 }}>
+          <Card>
             <Card.Body>
               <Card.Title className={"text-primary"}>
-                <strong>
-                  Burned {workhardCtx?.metadata.commitSymbol || "COMMIT"}
-                  <OverlayTooltip
-                    tip={`A stablecoin to tokenize your revenue stream. Pay your workers with value-added money.`}
-                    text={`❔`}
-                  />
-                </strong>
+                Burned {workhardCtx?.metadata.commitSymbol || "COMMIT"}
+                <OverlayTooltip
+                  tip={`A stablecoin to tokenize your revenue stream. Pay your workers with value-added money.`}
+                  text={`❔`}
+                />
               </Card.Title>
               <Card.Text style={{ fontSize: "2rem" }}>
                 {bigNumToFixed(burnedCommit || 0)}
@@ -275,19 +270,17 @@ const Dashboard = () => {
             </Card.Body>
           </Card>
         </Col>
-        <Col md={3}>
-          <Card border={"primary"}>
+        <Col md={3} style={{ padding: 0 }}>
+          <Card>
             <Card.Body>
               <Card.Title className={"text-primary"}>
-                <strong>
-                  Total {workhardCtx?.metadata.visionSymbol || "VISION"}
-                  <OverlayTooltip
-                    tip={`Liquid stock options for your project. Believers are ${
-                      workhardCtx?.metadata.visionSymbol || "VISION"
-                    } long term HODLers. Unbelievers can easily exit.`}
-                    text={`❔`}
-                  />
-                </strong>
+                Total {workhardCtx?.metadata.visionSymbol || "VISION"}
+                <OverlayTooltip
+                  tip={`Liquid stock options for your project. Believers are ${
+                    workhardCtx?.metadata.visionSymbol || "VISION"
+                  } long term HODLers. Unbelievers can easily exit.`}
+                  text={`❔`}
+                />
               </Card.Title>
               <Card.Text style={{ fontSize: "2rem" }}>
                 {bigNumToFixed(visionSupply || 0)}
@@ -299,20 +292,18 @@ const Dashboard = () => {
             </Card.Body>
           </Card>
         </Col>
-        <Col md={3}>
-          <Card border={"primary"}>
+        <Col md={3} style={{ padding: 0 }}>
+          <Card>
             <Card.Body>
               <Card.Title className={"text-primary"}>
-                <strong>
-                  Total {workhardCtx?.metadata.rightSymbol || "RIGHT"}
-                  <OverlayTooltip
-                    tip={`
+                Total {workhardCtx?.metadata.rightSymbol || "RIGHT"}
+                <OverlayTooltip
+                  tip={`
                   Reward your long term ${
                     workhardCtx?.metadata.visionSymbol || "VISION"
                   } believers with access to devidends and voting power.`}
-                    text={`❔`}
-                  />
-                </strong>
+                  text={`❔`}
+                />
               </Card.Title>
               <Card.Text style={{ fontSize: "2rem" }}>
                 {bigNumToFixed(rightSupply || 0)}

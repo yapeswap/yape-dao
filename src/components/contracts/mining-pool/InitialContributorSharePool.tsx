@@ -188,9 +188,9 @@ export const InitialContributorSharePool: React.FC<InitialContributorSharePoolPr
   };
 
   return (
-    <Card border="primary">
-      <Card.Header className="bg-white border-primary text-primary">
-        Early Stage Contributor Share Pool
+    <Card>
+      <Card.Header>
+        <h5>Early Stage Contributor Share Pool</h5>
       </Card.Header>
       <Card.Body>
         <Row>

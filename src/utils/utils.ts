@@ -554,7 +554,7 @@ export const getTokenSymbol = async (
     const symbol = await ERC20__factory.connect(address, provider).symbol();
     if (["UNI-V2", "SLP", "YLP"].includes(symbol)) {
       const { symbol0, symbol1 } = await getLPTokenSymbols(address, provider);
-      return `${symbol0}/${symbol1} ${symbol}`;
+      return `${symbol0}/${symbol1}`;
     } else {
       return symbol;
     }

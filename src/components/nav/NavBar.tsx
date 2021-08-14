@@ -15,7 +15,15 @@ export interface NavBarProps {
 const NavBar: React.FC<NavBarProps> = ({ menus, secondary, adminMenus }) => {
   const history = useHistory();
   return (
-    <Navbar expand="lg" bg={"primary"} fixed={"top"} variant="dark">
+    <Navbar
+      expand="lg"
+      fixed={"top"}
+      style={{
+        borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
+        fontFamily: "Lobster Two",
+      }}
+      className={"bg-white"}
+    >
       <Container>
         <NavBarBrand />
         <Navbar.Collapse>
@@ -94,11 +102,10 @@ const NavBar: React.FC<NavBarProps> = ({ menus, secondary, adminMenus }) => {
             aria-controls="basic-navbar-nav"
             className="justify-content-end"
           />
-          {secondary && (
-            <Button as={Link} to={`/`} style={{ margin: 10 }}>
-              Go to Work Hard
-            </Button>
-          )}
+          <Button as={"a"} href={`https://app.yape.exchange/`} target="_blank">
+            Go to app
+          </Button>
+          <div style={{ margin: 5 }}> </div>
           <Wallet className="justify-content-end" />
         </Row>
       </Container>

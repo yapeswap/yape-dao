@@ -411,21 +411,31 @@ export const ERC20StakeMiningV1: React.FC<ERC20StakeMiningV1Props> = ({
   );
 
   return (
-    <Card border="primary">
-      <Card.Header className="bg-white border-primary text-primary">
-        {title}{" "}
-        {logos &&
-          logos.map((logo) => (
-            <>
-              {" "}
-              <Image style={{ height: "1.5rem" }} src={logo} alt={""} />
-            </>
-          ))}{" "}
+    <Card>
+      <Card.Header>
+        <h5>
+          {title}{" "}
+          {logos &&
+            logos.map((logo) => (
+              <>
+                {" "}
+                <Image
+                  style={{
+                    width: "1.5rem",
+                    height: "1.5rem",
+                    borderRadius: "50%",
+                  }}
+                  src={logo}
+                  alt={""}
+                />
+              </>
+            ))}{" "}
+        </h5>
       </Card.Header>
       <Card.Body>
         {description && (
           <>
-            <p style={{ height: "3rem" }}>{description}</p>
+            <p style={{ height: "5rem" }}>{description}</p>
             <hr />
           </>
         )}
