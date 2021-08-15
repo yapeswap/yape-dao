@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Work Hard Finance",
+  "short_name": "Yapeswap",
+  "name": "Yapeswap Interface",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +20,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#f94144",
+  "background_color": "#f9c74f"
 }
