@@ -103,7 +103,7 @@ const NavBar: React.FC<NavBarProps> = ({ menus, secondary, adminMenus }) => {
             className="justify-content-end"
           />
           <Button as={"a"} href={`https://app.yape.exchange/`} target="_blank">
-            Go to app
+            Go to swap
           </Button>
           <div style={{ margin: 5 }}> </div>
           <Wallet className="justify-content-end" />
