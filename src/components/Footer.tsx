@@ -15,16 +15,16 @@ const Footer = () => (
             <a href="https://forum.workhard.finance">Forum</a>
           </li>
           <li className="float-lg-left" style={{ marginRight: 10 }}>
-            <a href="https://discord.gg/eYCcusjXUr">Discord</a>
+            <a href="https://discord.gg/jUjE6Y4q6u">Discord</a>
           </li>
           <li className="float-lg-left" style={{ marginRight: 10 }}>
-            <a href="https://twitter.com/workhardfinance">Twitter</a>
+            <a href="https://twitter.com/yapeswap">Twitter</a>
           </li>
           <li className="float-lg-left" style={{ marginRight: 10 }}>
-            <a href="https://github.com/workhard-finance">GitHub</a>
+            <a href="https://github.com/yapeswap">GitHub</a>
           </li>
           <li className="float-lg-left" style={{ marginRight: 10 }}>
-            <a href="https://medium.com/@Cutshamache">Medium</a>
+            <a href="https://yapeswapdao.medium.com">Medium</a>
           </li>
           {/* <li className="float-lg-left" style={{ marginRight: 10 }}>
             <Link to={"/res"}>Resources</Link>
@@ -33,8 +33,8 @@ const Footer = () => (
         <br />
         <br />
         <p>
-          Made by crypto nomads around the world. Code released under the{" "}
-          <a href="https://github.com/workhard-finance/protocol/blob/master/LICENSE">
+          Made by crypto apes! Code released under the{" "}
+          <a href="https://github.com/yapeswap/yape-core/blob/main/LICENSE">
             GPL v3 license.
           </a>
         </p>
