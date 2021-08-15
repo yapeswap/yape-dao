@@ -98,6 +98,14 @@ p {
   background-color: $bg3;
 }
 
+.btn-outline-primary {
+  color: $red-salsa;
+}
+
+.btn-outline-info {
+  color: $info;
+}
+
 // .btn-info {
 //   color: white;
 //   font-weight: 500;
@@ -118,4 +126,41 @@ p {
 
 a {
   color: $primary;
+}
+
+.nav-tabs {
+  border-bottom: 2px solid $red-salsa;
+  .nav-link {
+    margin-bottom: -2px;
+  }
+  .nav-link.active,
+  .nav-item.show .nav-link {
+    font-weight: 700;
+    color: $red-salsa;
+    background-color: #f9c74f;
+    border-width: 2px;
+    border-color: $red-salsa $red-salsa $malze-crayola;
+    border-radius: 1rem 1rem 0 0;
+  }
+  .nav-link:hover,
+  .nav-link:focus {
+    border-width: 2px;
+    border-color: $red-salsa $red-salsa $malze-crayola;
+    border-radius: 1rem 1rem 0 0;
+  }
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+  color: white;
+  background-color: #f94144;
+  border-radius: 1rem;
+}
+
+.alert {
+  border-radius: 1rem;
+}
+
+.react-toast-notifications__container {
+  z-index: 1050 !important;
 }

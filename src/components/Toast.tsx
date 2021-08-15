@@ -7,7 +7,7 @@ const DefaultToast: React.FC<ToastProps> = (props) => {
   const { variant, content } = children as any;
   return (
     <Alert
-      style={{ maxWidth: "50rem", zIndex: 2000 }}
+      style={{ maxWidth: "50rem" }}
       onClose={props.onDismiss}
       variant={variant}
       dismissible

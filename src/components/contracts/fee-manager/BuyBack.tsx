@@ -84,6 +84,7 @@ export const BuyBack: React.FC<{
 
   const getRoute = async (balance: BigNumber) => {
     if (!library) return undefined;
+
     const chainId = 1;
     const factory = UniswapV2Factory__factory.connect(pool2Factory, library);
     const router = new Contract(YAPE_ROUTER, IUniswapV2Router02ABI, library);
@@ -149,11 +150,6 @@ export const BuyBack: React.FC<{
       timestamp + 120
     );
     const fm = FeeManager__factory.connect(feeManager, library);
-    console.log("DEX", YAPE_ROUTER);
-    console.log("ROUTE token in", route.path[0]);
-    console.log("ROUTE amount in", route.amountIn);
-    console.log("ROUTE full path is ", route.path);
-    console.log("ROUTE calldata", popTx.data);
     handleTransaction(
       fm
         .connect(signer)
