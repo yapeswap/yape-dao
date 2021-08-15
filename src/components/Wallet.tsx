@@ -157,7 +157,7 @@ const Wallet = (props: React.ComponentProps<any>) => {
       <Button variant={"warning"} onClick={active ? handleShow : handleShow}>
         {active ? `${account?.slice(0, 6)}...${account?.slice(-4)}` : "Connect"}
       </Button>
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>Choose wallet to connect</Modal.Title>
         </Modal.Header>

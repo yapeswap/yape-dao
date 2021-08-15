@@ -5,6 +5,7 @@ import { isAddress } from "ethers/lib/utils";
 import React, { useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
 import { useToasts } from "react-toast-notifications";
+import { useStores } from "../../hooks/user-stores";
 import { useWorkhard } from "../../providers/WorkhardProvider";
 import { PoolType, PoolTypeHash } from "../../utils/ERC165Interfaces";
 import {
@@ -24,9 +25,9 @@ export interface MiningPoolProps {
   tokenSymbol?: string;
   totalEmission: BigNumber;
   apy: number;
+  tvl: number;
   emissionWeightSum: BigNumber;
   description?: string;
-  collapsible?: boolean;
   link?: string;
 }
 
@@ -39,7 +40,8 @@ export const MiningPool: React.FC<MiningPoolProps> = (props) => {
   const [tokenSymbol, setTokenSymbol] = useState<string | undefined>(
     props.tokenSymbol
   );
-  const [logos, setLogos] = useState<string[]>();
+  const [tokens, setTokens] = useState<string[]>();
+  const { mineStore } = useStores();
 
   useEffect(() => {
     if (workhardCtx) {
@@ -72,46 +74,36 @@ export const MiningPool: React.FC<MiningPoolProps> = (props) => {
 
   useEffect(() => {
     if (workhardCtx && baseToken) {
-      Promise.all([
-        UniswapV2Pair__factory.connect(
-          baseToken,
-          workhardCtx.web3.library
-        ).token0(),
-        UniswapV2Pair__factory.connect(
-          baseToken,
-          workhardCtx.web3.library
-        ).token1(),
-      ]).then(([token0, token1]) => {
-        setLogos([token0, token1].map(getTokenLogo));
-      });
+      mineStore.lpBaseTokens(baseToken).then(setTokens);
     }
-  }, [workhardCtx, tokenSymbol]);
+  }, [workhardCtx, baseToken]);
+
   if (poolType === PoolType.ERC20BurnV1) {
     return (
       <ERC20BurnMiningV1
         poolIdx={props.poolIdx}
-        title={props.title || `${tokenSymbol || baseToken}`}
+        title={props.title || `${tokenSymbol || "fetching..."}`}
         tokenName={tokenSymbol || baseToken}
         poolAddress={props.poolAddress}
         totalEmission={props.totalEmission}
         emissionWeightSum={props.emissionWeightSum}
         apy={props.apy || 0}
-        collapsible={props.collapsible}
-        logos={logos}
+        tvl={props.tvl || 0}
+        tokens={tokens}
       />
     );
   } else if (poolType === PoolType.ERC20StakeV1) {
     return (
       <ERC20StakeMiningV1
         poolIdx={props.poolIdx}
-        title={props.title || `${tokenSymbol || baseToken}`}
+        title={props.title || `${tokenSymbol || "fetching..."}`}
         tokenName={tokenSymbol || baseToken}
         poolAddress={props.poolAddress}
         totalEmission={props.totalEmission}
         emissionWeightSum={props.emissionWeightSum}
         apy={props.apy || 0}
-        collapsible={props.collapsible}
-        logos={logos}
+        tvl={props.tvl || 0}
+        tokens={tokens}
       />
     );
   } else if (poolType === undefined) {

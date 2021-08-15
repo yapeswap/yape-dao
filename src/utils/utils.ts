@@ -567,3 +567,9 @@ export const getTokenSymbol = async (
     return `Unknown Type ${address.slice(0, 6)}...${address.slice(0, 4)}`;
   }
 };
+
+export const usdFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  maximumFractionDigits: 0,
+});

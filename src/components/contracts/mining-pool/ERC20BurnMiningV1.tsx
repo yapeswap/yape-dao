@@ -7,10 +7,12 @@ import {
   Form,
   Image,
   InputGroup,
+  Modal,
   ProgressBar,
   Row,
 } from "react-bootstrap";
-import { useWorkhard } from "../../../providers/WorkhardProvider";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { useWeb3React } from "@web3-react/core";
 import {
@@ -18,12 +20,15 @@ import {
   ERC20BurnMiningV1__factory,
   MiningPool__factory,
 } from "@workhard/protocol";
+import { useWorkhard } from "../../../providers/WorkhardProvider";
 import {
   errorHandler,
+  getTokenLogo,
   getVariantForProgressBar,
   handleTransaction,
   isApproved,
   TxStatus,
+  usdFormatter,
 } from "../../../utils/utils";
 import {
   CoingeckoTokenDetails,
@@ -43,11 +48,12 @@ export interface ERC20BurnMiningV1Props {
   totalEmission: BigNumber;
   emissionWeightSum: BigNumber;
   apy: number;
+  tvl: number;
   maxAPY?: number;
   description?: string;
   collapsible?: boolean;
   link?: string;
-  logos?: string[];
+  tokens?: string[];
 }
 
 export const ERC20BurnMiningV1: React.FC<ERC20BurnMiningV1Props> = ({
@@ -58,20 +64,21 @@ export const ERC20BurnMiningV1: React.FC<ERC20BurnMiningV1Props> = ({
   totalEmission,
   apy,
   maxAPY,
+  tvl,
   description,
   collapsible,
   emissionWeightSum,
   link,
-  logos,
+  tokens,
 }) => {
   const { account, library } = useWeb3React();
   const { blockNumber } = useBlockNumber();
   const workhardCtx = useWorkhard();
   const { addToast } = useToasts();
 
-  const [collapsed, setCollapsed] = useState<boolean>(
-    collapsible ? true : false
-  );
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   const [tokenAddress, setTokenAddress] = useState<string>();
   const [tokenBalance, setTokenBalance] = useState<BigNumber>();
   const [symbol, setSymbol] = useState<string>();
@@ -253,142 +260,75 @@ export const ERC20BurnMiningV1: React.FC<ERC20BurnMiningV1Props> = ({
     }
   };
 
-  const collapsedDetails = () => (
-    <>
-      {collapsible && (
-        <>
-          <hr />
-          <Card.Title>Weekly allocation</Card.Title>
-          <Card.Text style={{ fontSize: "1.5rem" }}>
-            {parseFloat(formatEther(allocatedVISION)).toFixed(2)}{" "}
-            <span style={{ fontSize: "0.75rem" }}>
-              {workhardCtx?.metadata.visionSymbol || "VISION"}
-            </span>
-          </Card.Text>
-        </>
-      )}
-      <hr />
-      <Card.Title>
-        Burn{" "}
-        <a href={link} target="_blank">
-          ${tokenName || symbol}
-        </a>
-      </Card.Title>
-      <Form>
-        <Form.Group>
-          <InputGroup className="mb-2">
-            <InputGroup.Prepend>
-              <InputGroup.Text>Burn</InputGroup.Text>
-            </InputGroup.Prepend>
-            <Form.Control
-              value={amount}
-              onChange={({ target: { value } }) => setAmount(value)}
-              placeholder={getMaxAmount()}
-            />
-            <InputGroup.Append
-              style={{ cursor: "pointer" }}
-              onClick={() => setAmount(getMaxAmount())}
-            >
-              <InputGroup.Text>MAX</InputGroup.Text>
-            </InputGroup.Append>
-          </InputGroup>
-        </Form.Group>
-        <ProgressBar
-          variant={getVariantForProgressBar(burnPercent || 0)}
-          animated
-          now={burnPercent}
-        />
-        <Card.Text>
-          Burned: {formatEther(burnedAmount || 0)} / Balance:{" "}
-          {formatEther(
-            BigNumber.from(tokenBalance || 0).add(burnedAmount || 0)
-          )}
-        </Card.Text>
-        <Row>
-          <Col>
-            <ConditionalButton
-              enabledWhen={!burnedAmount?.isZero()}
-              whyDisabled="you are not mining"
-              variant="outline-danger"
-              onClick={exit}
-            >
-              Stop mining and withdraw rewards
-            </ConditionalButton>
-          </Col>
-          <Col style={{ textAlign: "end" }}>
-            <ConditionalButton
-              variant="danger"
-              enabledWhen={
-                isBurnableCommitAmount() && txStatus !== TxStatus.PENDING
-              }
-              whyDisabled={
-                isBurnableCommitAmount() ? "not enough balance" : "pending"
-              }
-              onClick={isApproved(allowance, amount) ? burn : approve}
-            >
-              {isApproved(allowance, amount) ? "Burn" : "Approve"}
-            </ConditionalButton>
-          </Col>
-        </Row>
-      </Form>
-    </>
-  );
-
   return (
-    <Card>
-      <Card.Header>
-        <h5>
-          {title}{" "}
-          {logos &&
-            logos.map((logo) => (
-              <>
-                {" "}
-                <Image
-                  style={{ height: "1.5rem", borderRadius: "50%" }}
-                  src={logo}
-                  alt={""}
-                />
-              </>
-            ))}
-        </h5>
-      </Card.Header>
-
-      <Card.Body>
-        {description && (
-          <>
-            <p style={{ height: "5rem" }}>{description}</p>
-            <hr />
-          </>
-        )}
-        <Row>
-          <Col style={{ marginBottom: "1rem" }}>
-            <Card.Title>
-              ARR
-              <OverlayTooltip
-                tip={
-                  "Annual Revenue Run Rate = (earned vision - burned commit) * 12 months / burned commit"
-                }
-                text="❔"
-              />
-            </Card.Title>
-            <Card.Text>
-              <span style={{ fontSize: "1.5rem" }}>
-                {apy.toFixed(0)}
-                {maxAPY ? ` ~ ${maxAPY.toFixed(0)}` : ""}
-              </span>{" "}
-              %
-            </Card.Text>
-          </Col>
-          <Col style={{ marginBottom: "1rem", minWidth: "11rem" }}>
-            <Card.Title>Mined</Card.Title>
-            <Card.Text style={{ fontSize: "1.5rem" }}>
-              {parseFloat(formatEther(mined || 0)).toFixed(2)}{" "}
-              <span style={{ fontSize: "0.75rem" }}>
-                {workhardCtx?.metadata.visionSymbol || "VISION"}
-              </span>
-            </Card.Text>
-          </Col>
-          {!collapsible && (
+    <div>
+      <Modal
+        show={show}
+        onHide={handleClose}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header>
+          <Modal.Title>
+            {title}{" "}
+            {tokens &&
+              tokens.map((addr) => (
+                <>
+                  {" "}
+                  <Image
+                    style={{
+                      width: "1.5rem",
+                      height: "1.5rem",
+                      borderRadius: "50%",
+                      marginRight: "-0.7rem",
+                    }}
+                    src={getTokenLogo(addr)}
+                    alt={""}
+                  />
+                </>
+              ))}{" "}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {description && (
+            <>
+              <p>{description}</p>
+              <hr />
+            </>
+          )}
+          <Row>
+            <Col style={{ marginBottom: "1rem" }}>
+              <Card.Title>
+                ARR{" "}
+                <OverlayTooltip
+                  tip={
+                    "Annual Revenue Run Rate = (earned vision - burned commit) * 12 months / burned commit"
+                  }
+                >
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    style={{ cursor: "pointer" }}
+                  />
+                </OverlayTooltip>
+              </Card.Title>
+              <Card.Text>
+                <span style={{ fontSize: "1.5rem" }}>
+                  {apy.toFixed(0)}
+                  {maxAPY ? ` ~ ${maxAPY.toFixed(0)}` : ""}
+                </span>{" "}
+                %
+              </Card.Text>
+            </Col>
+            <Col style={{ marginBottom: "1rem", minWidth: "11rem" }}>
+              <Card.Title>Mined</Card.Title>
+              <Card.Text style={{ fontSize: "1.5rem" }}>
+                {parseFloat(formatEther(mined || 0)).toFixed(2)}{" "}
+                <span style={{ fontSize: "0.75rem" }}>
+                  {workhardCtx?.metadata.visionSymbol || "VISION"}
+                </span>
+              </Card.Text>
+            </Col>
             <Col style={{ marginBottom: "1rem", minWidth: "12rem" }}>
               <Card.Title>Weekly allocation</Card.Title>
               <Card.Text style={{ fontSize: "1.5rem" }}>
@@ -398,18 +338,119 @@ export const ERC20BurnMiningV1: React.FC<ERC20BurnMiningV1Props> = ({
                 </span>
               </Card.Text>
             </Col>
-          )}
-        </Row>
-        {collapsible && (
-          <Button
-            variant="outline-primary"
-            onClick={() => setCollapsed(!collapsed)}
-          >
-            {collapsed ? "▼ view more" : "▲ close details"}
-          </Button>
-        )}
-        {(!collapsible || !collapsed) && collapsedDetails()}
-      </Card.Body>
-    </Card>
+          </Row>
+          <hr />
+          <Form>
+            <Form.Group>
+              <InputGroup className="mb-2">
+                <InputGroup.Prepend>
+                  <InputGroup.Text>Burn</InputGroup.Text>
+                </InputGroup.Prepend>
+                <Form.Control
+                  value={amount}
+                  onChange={({ target: { value } }) => setAmount(value)}
+                  placeholder={getMaxAmount()}
+                />
+                <InputGroup.Append
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setAmount(getMaxAmount())}
+                >
+                  <InputGroup.Text>MAX</InputGroup.Text>
+                </InputGroup.Append>
+              </InputGroup>
+            </Form.Group>
+            <ProgressBar
+              variant={getVariantForProgressBar(burnPercent || 0)}
+              animated
+              now={burnPercent}
+            />
+            <Card.Text>
+              Burned: {formatEther(burnedAmount || 0)} / Balance:{" "}
+              {formatEther(
+                BigNumber.from(tokenBalance || 0).add(burnedAmount || 0)
+              )}
+            </Card.Text>
+            <Row>
+              <Col>
+                <ConditionalButton
+                  enabledWhen={!burnedAmount?.isZero()}
+                  whyDisabled="you are not mining"
+                  variant="outline-danger"
+                  onClick={exit}
+                >
+                  Stop mining and withdraw rewards
+                </ConditionalButton>
+              </Col>
+              <Col style={{ textAlign: "end" }}>
+                <ConditionalButton
+                  variant="danger"
+                  enabledWhen={
+                    isBurnableCommitAmount() && txStatus !== TxStatus.PENDING
+                  }
+                  whyDisabled={
+                    isBurnableCommitAmount() ? "pending" : "not enough balance"
+                  }
+                  onClick={isApproved(allowance, amount) ? burn : approve}
+                >
+                  {isApproved(allowance, amount) ? "Burn" : "Approve"}
+                </ConditionalButton>
+              </Col>
+            </Row>
+          </Form>
+        </Modal.Body>
+      </Modal>
+      <Card onClick={handleShow} style={{ cursor: "pointer" }}>
+        <Card.Header>
+          {title}{" "}
+          {tokens &&
+            tokens.map((addr) => (
+              <>
+                {" "}
+                <Image
+                  style={{ height: "1.5rem", borderRadius: "50%" }}
+                  src={getTokenLogo(addr)}
+                  alt={""}
+                />
+              </>
+            ))}
+        </Card.Header>
+        <Card.Body>
+          <Row>
+            <Col style={{ marginBottom: "1rem" }}>
+              <Card.Title>
+                ARR{" "}
+                <OverlayTooltip
+                  tip={
+                    "Annual Revenue Run Rate = (earned vision - burned commit) * 12 months / burned commit"
+                  }
+                >
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    style={{ cursor: "pointer" }}
+                  />
+                </OverlayTooltip>
+              </Card.Title>
+              <Card.Text>
+                <span style={{ fontSize: "1.5rem" }}>
+                  {apy.toFixed(0)}
+                  {maxAPY ? ` ~ ${maxAPY.toFixed(0)}` : ""}
+                </span>{" "}
+                %
+              </Card.Text>
+            </Col>
+            <Col style={{ marginBottom: "1rem", minWidth: "11rem" }}>
+              <Card.Title>Mined</Card.Title>
+              <Card.Text style={{ fontSize: "1.5rem" }}>
+                {parseFloat(formatEther(mined || 0)).toFixed(2)}{" "}
+                <span style={{ fontSize: "0.75rem" }}>
+                  {workhardCtx?.metadata.visionSymbol || "VISION"}
+                </span>
+              </Card.Text>
+            </Col>
+          </Row>
+          Total: {usdFormatter.format(tvl)}
+        </Card.Body>
+      </Card>
+    </div>
   );
 };

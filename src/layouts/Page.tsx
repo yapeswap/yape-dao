@@ -25,12 +25,12 @@ const Page = (props: React.ComponentProps<any>) => {
   if (daoId === 0) {
     menus = [
       {
-        name: "Work",
-        url: "/work",
-      },
-      {
         name: "Mine",
         url: "/mine",
+      },
+      {
+        name: "Work",
+        url: "/work",
       },
       {
         name: "Gov",
@@ -60,12 +60,12 @@ const Page = (props: React.ComponentProps<any>) => {
     ];
     secondary = [
       {
-        name: "Work",
-        url: "/work",
-      },
-      {
         name: "Mine",
         url: "/mine",
+      },
+      {
+        name: "Work",
+        url: "/work",
       },
       {
         name: "Gov",

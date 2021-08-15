@@ -23,14 +23,15 @@ const StableReserve: React.FC = () => {
 
   return (
     <Row>
-      <Col md={5} style={{ marginTop: "1rem" }}>
+      <Col
+        md={5}
+        style={{ marginTop: "1rem", height: "inherit", paddingRight: 0 }}
+      >
         <RedeemCommit />
       </Col>
-      <Col md={2} style={{ marginTop: "1rem", height: "inherit" }}>
-        <Card style={{ height: "100%" }} border={`primary`}>
-          <Card.Header className="text-primary border-primary bg-white">
-            Market Price
-          </Card.Header>
+      <Col md={2} style={{ marginTop: "1rem", height: "inherit", padding: 0 }}>
+        <Card style={{ height: "100%" }}>
+          <Card.Header>Market Price</Card.Header>
           <Card.Body>
             <Card.Title>Market Price</Card.Title>
             <Card.Text>
@@ -40,12 +41,11 @@ const StableReserve: React.FC = () => {
               {workhardCtx?.metadata.commitSymbol || `COMMIT`}
             </Card.Text>
             <br />
-            <br />
             <Button
               as={`a`}
               variant={"outline-warning"}
               className={"text-warning"}
-              children={`Go to Uniswap`}
+              children={`Go to dex`}
               style={{
                 position: "absolute",
                 bottom: "1rem",
@@ -56,7 +56,10 @@ const StableReserve: React.FC = () => {
           </Card.Body>
         </Card>
       </Col>
-      <Col md={5} style={{ marginTop: "1rem", height: "inherit" }}>
+      <Col
+        md={5}
+        style={{ marginTop: "1rem", height: "inherit", paddingLeft: 0 }}
+      >
         <BuyCommit style={{ height: "100%" }} />
       </Col>
     </Row>

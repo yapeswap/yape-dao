@@ -1,19 +1,33 @@
 import React from "react";
 import { action, get, observable } from "mobx";
-import { formatEther, getAddress } from "ethers/lib/utils";
+import { formatEther, formatUnits, getAddress } from "ethers/lib/utils";
 import { getPriceFromCoingecko } from "../utils/coingecko";
 import { BigNumber, Contract, Signer } from "ethers";
 import { Provider } from "@ethersproject/abstract-provider";
 import { WorkhardLibrary } from "../providers/WorkhardProvider";
 import { weiToEth } from "../utils/utils";
-import { MiningPool__factory } from "@workhard/protocol";
+import { ERC20__factory, MiningPool__factory } from "@workhard/protocol";
 import { getPool, getPoolAddress, getPoolContract } from "../utils/uniV3";
+import { UniswapV2Pair__factory } from "@workhard/protocol/dist/build/@uniswap";
 
 export class MineStore {
   @observable public lib: WorkhardLibrary | undefined;
   @observable public pools: string[] = [];
   @observable public apys: { [poolAddr: string]: number } = {};
+  @observable public tvls: { [poolAddr: string]: number } = {};
   @observable public maxApys: { [poolAddr: string]: number | undefined } = {};
+  @observable public lpBase: {
+    [poolAddr: string]: { token0: string; token1: string };
+  } = {};
+  @observable public baseTokens: {
+    [poolAddr: string]: string;
+  } = {};
+  @observable public tokenPrices: {
+    [poolAddr: string]: number;
+  } = {};
+  @observable public decimals: {
+    [poolAddr: string]: number;
+  } = {};
   @observable public distributable: boolean = false;
   @observable public visionPrice: number | undefined = 0;
   @observable public commitPrice: number | undefined = 0;
@@ -46,8 +60,33 @@ export class MineStore {
   };
 
   @get
+  tvl = (poolAddress: string) => {
+    return this.tvls[poolAddress] || NaN;
+  };
+
+  @get
   maxAPY = (poolAddress: string) => {
     return this.maxApys[poolAddress] || NaN;
+  };
+
+  @get
+  getBaseToken = async (poolAddr: string): Promise<string | undefined> => {
+    if (!this.baseTokens[poolAddr]) {
+      await this.loadBaseToken(poolAddr);
+    }
+    return this.baseTokens[poolAddr];
+  };
+
+  @get
+  lpBaseTokens = async (lpToken: string): Promise<string[] | undefined> => {
+    if (!this.lpBase[lpToken]) {
+      await this.loadReserveTokens(lpToken);
+    }
+    if (this.lpBase[lpToken]) {
+      return [this.lpBase[lpToken].token0, this.lpBase[lpToken].token1];
+    } else {
+      return undefined;
+    }
   };
 
   @action
@@ -59,9 +98,17 @@ export class MineStore {
 
   @action
   loadEthPrice = async () => {
-    this.ethPrice = await getPriceFromCoingecko(
+    this.ethPrice = await this.getTokenPrice(
       "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
     );
+  };
+
+  @action
+  getTokenPrice = async (token: string): Promise<number> => {
+    if (!this.tokenPrices[token]) {
+      this.tokenPrices[token] = (await getPriceFromCoingecko(token)) || NaN;
+    }
+    return this.tokenPrices[token];
   };
 
   @action
@@ -120,12 +167,10 @@ export class MineStore {
   loadAPYs = async () => {
     if (this.pools && this.lib) {
       for (let pool of this.pools) {
-        if (pool === this.lib.periphery.liquidityMining.address) {
-          this.loadLiquidityMiningAPY();
-        } else if (pool === this.lib.periphery.commitMining.address) {
+        if (pool === this.lib.periphery.commitMining.address) {
           this.loadCommitMiningAPY();
         } else {
-          this.loadERC20StakingAPY(pool);
+          this.loadLiquidityMiningAPY(pool);
         }
       }
       this.loadInitialContributorSharePoolAPY();
@@ -160,18 +205,31 @@ export class MineStore {
   };
 
   @action
-  loadLiquidityMiningAPY = async () => {
-    if (this.lib) {
-      const totalMiners = await this.lib.periphery.liquidityMining.totalMiners();
-      const visionPerYear = totalMiners.eq(0)
-        ? Infinity
-        : (await this.lib.periphery.liquidityMining.miningRate())
-            .mul(86400 * 365)
-            .div(totalMiners)
-            .toNumber();
-      const apy = 100 * (visionPerYear / this.visionPerLP);
-      this.apys[this.lib.periphery.liquidityMining.address] = apy;
+  loadLiquidityMiningAPY = async (pool: string) => {
+    const baseToken = await this.getBaseToken(pool);
+    if (!baseToken || !this.lib) {
+      return;
     }
+    const lpPrice = await this.loadLPTokenPrice(baseToken);
+    if (!lpPrice) return;
+    const miningPool = await MiningPool__factory.connect(
+      pool,
+      this.lib.web3.library
+    );
+    const totalMiners = await miningPool.totalMiners();
+    const visionPerYear = totalMiners.eq(0)
+      ? Infinity
+      : (await miningPool.miningRate())
+          .mul(86400 * 365)
+          .div(totalMiners)
+          .toNumber();
+    const apy =
+      100 * ((visionPerYear * (this.visionPrice || 0)) / (lpPrice || NaN)) -
+      100;
+    this.apys[this.lib.periphery.commitMining.address] = apy;
+    this.tvls[pool] =
+      parseFloat(formatUnits(totalMiners, await this.loadDecimal(baseToken))) *
+      lpPrice;
   };
 
   @action
@@ -187,7 +245,7 @@ export class MineStore {
 
       let commitPrice =
         this.commitPrice ||
-        (await getPriceFromCoingecko(this.lib.dao.commit.address));
+        (await this.getTokenPrice(this.lib.dao.commit.address));
       commitPrice = Math.min(commitPrice || 1, 2);
       if (commitPrice) {
         const apy =
@@ -240,7 +298,7 @@ export class MineStore {
             .div(totalMiners)
             .toNumber();
       const baseToken = await miningPool.baseToken();
-      const baseTokenPrice = await getPriceFromCoingecko(baseToken);
+      const baseTokenPrice = await this.getTokenPrice(baseToken);
       const apy =
         100 *
         ((visionPerYear * (this.visionPrice || 0)) / (baseTokenPrice || NaN));
@@ -264,13 +322,96 @@ export class MineStore {
             .div(totalMiners)
             .toNumber();
       const baseToken = await miningPool.baseToken();
-      const baseTokenPrice = await getPriceFromCoingecko(baseToken);
+      const baseTokenPrice = await this.getTokenPrice(baseToken);
       const apy =
         100 *
           ((visionPerYear * (this.visionPrice || 0)) /
             (baseTokenPrice || NaN)) -
         100;
       this.apys[poolAddress] = apy;
+    }
+  };
+
+  @action
+  loadLPTokenPrice = async (lpToken: string): Promise<number | undefined> => {
+    if (!this.lib) return;
+    const tokens = await this.lpBaseTokens(lpToken);
+    if (!tokens) return;
+    const [token0, token1] = tokens;
+
+    let decimal0 = await this.loadDecimal(token0);
+    let decimal1 = await this.loadDecimal(token1);
+
+    const pair = UniswapV2Pair__factory.connect(lpToken, this.lib.web3.library);
+    const supply = await pair.totalSupply();
+    const [reserve0, reserve1] = await pair.getReserves();
+    const amount0 = parseFloat(formatUnits(reserve0, decimal0));
+    const amount1 = parseFloat(formatUnits(reserve1, decimal1));
+
+    const [price0, price1] = await Promise.all([
+      this.getTokenPrice(token0),
+      this.getTokenPrice(token1),
+    ]);
+    let totalVal: number;
+    if (!!price0 && !!price1) {
+      totalVal = amount0 * price0 + amount1 * price1;
+    } else if (!price0 && !!price1) {
+      totalVal = 2 * amount1 * price1;
+    } else if (!!price0 && !price1) {
+      totalVal = 2 * amount0 * price0;
+    } else {
+      totalVal = 0;
+    }
+    const lpPrice = totalVal / Number.parseFloat(formatEther(supply));
+    this.tokenPrices[lpToken] = lpPrice;
+    return lpPrice;
+  };
+
+  @action
+  loadDecimal = async (erc20: string): Promise<number> => {
+    let decimal = this.decimals[erc20];
+    if (!decimal && !!this.lib) {
+      try {
+        decimal = await ERC20__factory.connect(
+          erc20,
+          this.lib.web3.library
+        ).decimals();
+      } catch {
+        decimal = 18;
+      }
+    }
+    return decimal;
+  };
+
+  @action
+  loadReserveTokens = async (lpToken: string) => {
+    if (this.lib) {
+      const pair = UniswapV2Pair__factory.connect(
+        lpToken,
+        this.lib.web3.library
+      );
+      try {
+        const [token0, token1] = await Promise.all([
+          pair.token0(),
+          pair.token1(),
+        ]);
+        this.lpBase[lpToken] = {
+          token0,
+          token1,
+        };
+      } catch {
+        // not a pair token
+      }
+    }
+  };
+  @action
+  loadBaseToken = async (poolAddr: string) => {
+    if (this.lib) {
+      const baseToken = await MiningPool__factory.connect(
+        poolAddr,
+        this.lib.web3.library
+      ).baseToken();
+      this.baseTokens[poolAddr] = baseToken;
     }
   };
 }

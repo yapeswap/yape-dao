@@ -19,6 +19,7 @@ $zomp: #43aa8b !default;
 $queen-blue: #577590 !default;
 
 $primary: $red-salsa;
+$success: $zomp;
 $white: $malze-crayola;
 $font-family-sans-serif: "Inter", sans-serif;
 $font-family-serif: "Inter", sans-serif;
@@ -38,8 +39,29 @@ $bg5: #ffffbf;
 @import "~bootswatch/dist/litera/bootswatch";
 
 body {
-  color: $red-salsa;
+  color: $orange-red;
   font-family: "Inter";
+  font-weight: 500;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.modal-header,
+.card-header {
+  font-family: "Lobster Two";
+  color: $primary;
+}
+
+.card-title {
+  color: $primary;
+}
+
+p {
+  color: $orange-red;
 }
 
 .btn {
@@ -53,29 +75,16 @@ body {
   color: white;
 }
 
-.card {
+.card,
+.modal-content {
   background-color: $bg2;
   border-radius: 1.078em;
   border-color: transparent;
   margin: 0.5em;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: "Lobster Two";
-  color: $primary;
-}
-
-p {
-  color: $red-salsa;
-}
-
 .table {
-  color: $primary;
+  color: $orange-red;
 }
 
 .input-group {
@@ -98,3 +107,15 @@ p {
 // .btn-primary {
 //   color: white;
 // }
+
+.modal-header {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  border-bottom-color: rgba(0, 0, 0, 0.125);
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+}
+
+a {
+  color: $primary;
+}

@@ -86,10 +86,8 @@ export const RedeemCommit: React.FC = observer(() => {
     }
   }, [account, workhardCtx, blockNumber]);
   return (
-    <Card border={"primary"}>
-      <Card.Header className="text-primary border-primary bg-white">
-        Redeem
-      </Card.Header>
+    <Card style={{ height: "100%" }}>
+      <Card.Header>Redeem</Card.Header>
       <Card.Body>
         <Row>
           <Col md={7}>
@@ -137,6 +135,7 @@ export const RedeemCommit: React.FC = observer(() => {
           <Card.Text>
             {`= ${formatEther(parseEther(redeemAmount || "0"))} $DAI`}
           </Card.Text>
+          <br />
           <ConditionalButton
             variant={"outline-success"}
             className={"text-success"}
@@ -154,6 +153,10 @@ export const RedeemCommit: React.FC = observer(() => {
                 ? "Approving contract"
                 : "Redeeming..."
             }
+            style={{
+              position: "absolute",
+              bottom: "1rem",
+            }}
             children={
               approveTxStatus === TxStatus.PENDING
                 ? "Approving..."

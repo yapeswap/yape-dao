@@ -8,6 +8,7 @@ import {
   Image,
   ProgressBar,
   Row,
+  Modal,
 } from "react-bootstrap";
 import {
   useWorkhard,
@@ -15,6 +16,8 @@ import {
 } from "../../../providers/WorkhardProvider";
 import { formatEther, getAddress, parseEther } from "ethers/lib/utils";
 import { useWeb3React } from "@web3-react/core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import {
   ERC20StakeMiningV1__factory,
   ERC20__factory,
@@ -27,6 +30,7 @@ import {
   handleTransaction,
   isApproved,
   TxStatus,
+  usdFormatter,
   weiToEth,
 } from "../../../utils/utils";
 import {
@@ -37,6 +41,7 @@ import { useToasts } from "react-toast-notifications";
 import { useBlockNumber } from "../../../providers/BlockNumberProvider";
 import { Col } from "react-bootstrap";
 import { ConditionalButton } from "../../ConditionalButton";
+import { UniswapV2ERC20__factory } from "@workhard/protocol/dist/build/@uniswap";
 
 export interface ERC20StakeMiningV1Props {
   poolIdx: number;
@@ -45,11 +50,11 @@ export interface ERC20StakeMiningV1Props {
   poolAddress: string;
   totalEmission: BigNumber;
   apy: number;
+  tvl: number;
   emissionWeightSum: BigNumber;
   description?: string;
-  collapsible?: boolean;
   link?: string;
-  logos?: string[];
+  tokens?: string[];
 }
 
 export const ERC20StakeMiningV1: React.FC<ERC20StakeMiningV1Props> = ({
@@ -58,21 +63,21 @@ export const ERC20StakeMiningV1: React.FC<ERC20StakeMiningV1Props> = ({
   tokenName,
   poolAddress,
   apy,
-  collapsible,
+  tvl,
   description,
   totalEmission,
   emissionWeightSum,
   link,
-  logos,
+  tokens,
 }) => {
   const { account, library } = useWeb3React();
   const { blockNumber } = useBlockNumber();
   const workhardCtx = useWorkhard();
   const { addToast } = useToasts();
 
-  const [collapsed, setCollapsed] = useState<boolean>(
-    collapsible ? true : false
-  );
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   const [tokenAddress, setTokenAddress] = useState<string>();
   const [tokenBalance, setTokenBalance] = useState<BigNumber>();
   const [symbol, setSymbol] = useState<string>();
@@ -290,172 +295,59 @@ export const ERC20StakeMiningV1: React.FC<ERC20StakeMiningV1Props> = ({
     }
   };
 
-  const collapsedDetails = () => (
-    <>
-      {collapsible && (
-        <>
-          <hr />
-          <Card.Title>Weekly allocation</Card.Title>
-          <Card.Text style={{ fontSize: "1.5rem" }}>
-            {parseFloat(formatEther(allocatedVISION)).toFixed(2)}{" "}
-            <span style={{ fontSize: "0.75rem" }}>
-              {workhardCtx?.metadata.visionSymbol || "VISION"}
-            </span>
-          </Card.Text>
-        </>
-      )}
-      <hr />
-      <Card.Title>
-        Stake{" "}
-        <a href={link} target="_blank">
-          ${tokenName || symbol}
-        </a>
-      </Card.Title>
-      <Form>
-        <Form.Group>
-          <InputGroup className="mb-2">
-            <InputGroup.Prepend>
-              <InputGroup.Text>
-                <span
-                  onClick={() => {
-                    toggleStakeOrWithdraw(true);
-                    setAmount("");
-                  }}
-                  style={{
-                    cursor: stakeOrWithdraw ? undefined : "pointer",
-                    textDecoration: stakeOrWithdraw ? "underline" : undefined,
-                  }}
-                >
-                  Stake
-                </span>
-                /
-                <span
-                  onClick={() => {
-                    toggleStakeOrWithdraw(false);
-                    setAmount("");
-                  }}
-                  style={{
-                    cursor: stakeOrWithdraw ? "pointer" : undefined,
-                    textDecoration: stakeOrWithdraw ? undefined : "underline",
-                  }}
-                >
-                  Withdraw
-                </span>
-              </InputGroup.Text>
-            </InputGroup.Prepend>
-            <Form.Control
-              value={amount}
-              onChange={({ target: { value } }) => setAmount(value)}
-              placeholder={getMaxAmount()}
-            />
-            <InputGroup.Append
-              style={{ cursor: "pointer" }}
-              onClick={() => setAmount(getMaxAmount())}
-            >
-              <InputGroup.Text>MAX</InputGroup.Text>
-            </InputGroup.Append>
-          </InputGroup>
-        </Form.Group>
-        <ProgressBar
-          variant={getVariantForProgressBar(stakePercent || 0)}
-          animated
-          now={stakePercent}
-        />
-        <Card.Text>
-          {weiToEth(stakedAmount || 0, 2)} /
-          {weiToEth(stakedAmount?.add(tokenBalance || 0) || 0, 2)} of your{" "}
-          {tokenName || tokenDetails?.name} is staked.
-        </Card.Text>
-        <Row>
-          <Col md={8}>
-            <ConditionalButton
-              enabledWhen={!stakedAmount?.isZero()}
-              whyDisabled="you are not mining."
-              variant="outline-success"
-              onClick={mine}
-            >
-              Mine
-            </ConditionalButton>{" "}
-            <ConditionalButton
-              enabledWhen={!stakedAmount?.isZero()}
-              whyDisabled="you are not mining."
-              variant="outline-success"
-              onClick={exit}
-            >
-              Mine & Exit
-            </ConditionalButton>
-          </Col>
-          <Col md={4} style={{ textAlign: "end" }}>
-            <ConditionalButton
-              variant="success"
-              enabledWhen={isStakableAmount() && txStatus !== TxStatus.PENDING}
-              whyDisabled="not enough balance"
-              onClick={
-                stakeOrWithdraw
-                  ? isApproved(allowance, amount)
-                    ? stake
-                    : approve
-                  : withdraw
-              }
-            >
-              {stakeOrWithdraw
-                ? isApproved(allowance, amount)
-                  ? "Stake"
-                  : "Approve"
-                : "Withdraw"}
-            </ConditionalButton>
-          </Col>
-        </Row>
-      </Form>
-    </>
-  );
-
   return (
-    <Card>
-      <Card.Header>
-        <h5>
-          {title}{" "}
-          {logos &&
-            logos.map((logo) => (
-              <>
-                {" "}
-                <Image
-                  style={{
-                    width: "1.5rem",
-                    height: "1.5rem",
-                    borderRadius: "50%",
-                  }}
-                  src={logo}
-                  alt={""}
-                />
-              </>
-            ))}{" "}
-        </h5>
-      </Card.Header>
-      <Card.Body>
-        {description && (
-          <>
-            <p style={{ height: "5rem" }}>{description}</p>
-            <hr />
-          </>
-        )}
-        <Row>
-          <Col style={{ marginBottom: "1rem" }}>
-            <Card.Title>APY</Card.Title>
-            <Card.Text>
-              <span style={{ fontSize: "1.5rem" }}>{apy?.toFixed(0)}</span> %
-            </Card.Text>
-          </Col>
-          <Col style={{ marginBottom: "1rem", minWidth: "11rem" }}>
-            <Card.Title>Mined</Card.Title>
-            <Card.Text style={{ fontSize: "1.5rem" }}>
-              {parseFloat(formatEther(mined || 0)).toFixed(2)}{" "}
-              <span style={{ fontSize: "0.75rem" }}>
-                {workhardCtx?.metadata.visionSymbol || "VISION"}
-              </span>
-            </Card.Text>
-          </Col>
-          {!collapsible && (
+    <div>
+      <Modal
+        show={show}
+        onHide={handleClose}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header>
+          <Modal.Title>
+            {title}{" "}
+            {tokens &&
+              tokens.map((addr) => (
+                <>
+                  {" "}
+                  <Image
+                    style={{
+                      width: "1.5rem",
+                      height: "1.5rem",
+                      borderRadius: "50%",
+                      marginRight: "-0.7rem",
+                    }}
+                    src={getTokenLogo(addr)}
+                    alt={""}
+                  />
+                </>
+              ))}{" "}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {description && (
+            <>
+              <p>{description}</p>
+              <hr />
+            </>
+          )}
+          <Row>
+            <Col style={{ marginBottom: "1rem" }}>
+              <Card.Title>APY</Card.Title>
+              <Card.Text>
+                <span style={{ fontSize: "1.5rem" }}>{apy?.toFixed(0)}</span> %
+              </Card.Text>
+            </Col>
+            <Col style={{ marginBottom: "1rem", minWidth: "11rem" }}>
+              <Card.Title>Mined</Card.Title>
+              <Card.Text style={{ fontSize: "1.5rem" }}>
+                {parseFloat(formatEther(mined || 0)).toFixed(2)}{" "}
+                <span style={{ fontSize: "0.75rem" }}>
+                  {workhardCtx?.metadata.visionSymbol || "VISION"}
+                </span>
+              </Card.Text>
+            </Col>
             <Col style={{ marginBottom: "1rem", minWidth: "12rem" }}>
               <Card.Title>Weekly allocation</Card.Title>
               <Card.Text style={{ fontSize: "1.5rem" }}>
@@ -465,21 +357,168 @@ export const ERC20StakeMiningV1: React.FC<ERC20StakeMiningV1Props> = ({
                 </span>
               </Card.Text>
             </Col>
-          )}
-        </Row>
-        {collapsible && (
-          <>
-            <br />
-            <Button
-              variant="outline-primary"
-              onClick={() => setCollapsed(!collapsed)}
-            >
-              {collapsed ? "▼ view more" : "▲ close details"}
-            </Button>
-          </>
-        )}
-        {(!collapsible || !collapsed) && collapsedDetails()}
-      </Card.Body>
-    </Card>
+          </Row>
+          <hr />
+          <Form>
+            <Form.Group>
+              <InputGroup className="mb-2">
+                <InputGroup.Prepend>
+                  <InputGroup.Text>
+                    <span
+                      onClick={() => {
+                        toggleStakeOrWithdraw(true);
+                        setAmount("");
+                      }}
+                      style={{
+                        cursor: stakeOrWithdraw ? undefined : "pointer",
+                        textDecoration: stakeOrWithdraw
+                          ? "underline"
+                          : undefined,
+                      }}
+                    >
+                      Stake
+                    </span>
+                    /
+                    <span
+                      onClick={() => {
+                        toggleStakeOrWithdraw(false);
+                        setAmount("");
+                      }}
+                      style={{
+                        cursor: stakeOrWithdraw ? "pointer" : undefined,
+                        textDecoration: stakeOrWithdraw
+                          ? undefined
+                          : "underline",
+                      }}
+                    >
+                      Withdraw
+                    </span>
+                  </InputGroup.Text>
+                </InputGroup.Prepend>
+                <Form.Control
+                  value={amount}
+                  onChange={({ target: { value } }) => setAmount(value)}
+                  placeholder={getMaxAmount()}
+                />
+                <InputGroup.Append
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setAmount(getMaxAmount())}
+                >
+                  <InputGroup.Text>MAX</InputGroup.Text>
+                </InputGroup.Append>
+              </InputGroup>
+            </Form.Group>
+            <ProgressBar
+              variant={getVariantForProgressBar(stakePercent || 0)}
+              animated
+              now={stakePercent}
+            />
+            <Card.Text>
+              {weiToEth(stakedAmount || 0, 6)} /
+              {weiToEth(stakedAmount?.add(tokenBalance || 0) || 0, 6)} of your{" "}
+              {tokenName || tokenDetails?.name} is staked.
+            </Card.Text>
+            <Row>
+              <Col md={8}>
+                <ConditionalButton
+                  enabledWhen={!stakedAmount?.isZero()}
+                  whyDisabled="you are not mining."
+                  variant="outline-primary"
+                  onClick={mine}
+                >
+                  Mine
+                </ConditionalButton>{" "}
+                <ConditionalButton
+                  enabledWhen={!stakedAmount?.isZero()}
+                  whyDisabled="you are not mining."
+                  variant="outline-primary"
+                  onClick={exit}
+                >
+                  Mine & Exit
+                </ConditionalButton>{" "}
+                <Button
+                  as={"a"}
+                  href={
+                    tokens &&
+                    `https://app.yape.exchange/#/add/ETH/${tokens[0]}/${tokens[1]}`
+                  }
+                  disabled={!tokens}
+                  target={"blank"}
+                >
+                  Go to add liquidity{" "}
+                  <FontAwesomeIcon
+                    icon={faExternalLinkAlt}
+                    style={{ cursor: "pointer" }}
+                  />
+                </Button>
+              </Col>
+              <Col md={4} style={{ textAlign: "end" }}>
+                <ConditionalButton
+                  variant="success"
+                  enabledWhen={
+                    isStakableAmount() && txStatus !== TxStatus.PENDING
+                  }
+                  whyDisabled="not enough balance"
+                  onClick={
+                    stakeOrWithdraw
+                      ? isApproved(allowance, amount)
+                        ? stake
+                        : approve
+                      : withdraw
+                  }
+                >
+                  {stakeOrWithdraw
+                    ? isApproved(allowance, amount)
+                      ? "Stake"
+                      : "Approve"
+                    : "Withdraw"}
+                </ConditionalButton>
+              </Col>
+            </Row>
+          </Form>
+        </Modal.Body>
+      </Modal>
+      <Card onClick={handleShow} style={{ cursor: "pointer" }}>
+        <Card.Header>
+          {title}
+          {tokens &&
+            tokens.map((addr) => (
+              <>
+                {" "}
+                <Image
+                  style={{
+                    width: "1.5rem",
+                    height: "1.5rem",
+                    borderRadius: "50%",
+                    marginRight: "-0.7rem",
+                  }}
+                  src={getTokenLogo(addr)}
+                  alt={""}
+                />
+              </>
+            ))}{" "}
+        </Card.Header>
+        <Card.Body>
+          <Row>
+            <Col style={{ marginBottom: "1rem" }}>
+              <Card.Title>APY</Card.Title>
+              <Card.Text>
+                <span style={{ fontSize: "1.5rem" }}>{apy?.toFixed(0)}</span> %
+              </Card.Text>
+            </Col>
+            <Col style={{ marginBottom: "1rem", minWidth: "11rem" }}>
+              <Card.Title>Mined</Card.Title>
+              <Card.Text style={{ fontSize: "1.5rem" }}>
+                {parseFloat(formatEther(mined || 0)).toFixed(2)}{" "}
+                <span style={{ fontSize: "0.75rem" }}>
+                  {workhardCtx?.metadata.visionSymbol || "VISION"}
+                </span>
+              </Card.Text>
+            </Col>
+          </Row>
+          Total: {usdFormatter.format(tvl)}
+        </Card.Body>
+      </Card>
+    </div>
   );
 };

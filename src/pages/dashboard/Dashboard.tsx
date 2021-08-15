@@ -20,6 +20,7 @@ import { Erc20Balance } from "../../components/contracts/erc20/Erc20Balance";
 import { ApeSays } from "../../components/views/ApeSays";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Allocation } from "../../components/contracts/vision-emitter/Allocation";
 import { useBlockNumber } from "../../providers/BlockNumberProvider";
@@ -162,7 +163,7 @@ const Dashboard = () => {
             What is <b>{metadata?.name}?</b>
           </h2>
           <p>{metadata?.description}</p>
-          <p>
+          <p className={"text-primary"}>
             <strong>
               {remainingTime === 0
                 ? `Emission started!`
@@ -246,15 +247,21 @@ const Dashboard = () => {
       <Row>
         <Col md={3} style={{ padding: 0 }}>
           <Card>
+            <div style={{ position: "absolute", right: "1rem", top: "1rem" }}>
+              <OverlayTooltip
+                tip={`Governance can mint more ${
+                  workhardCtx?.metadata.commitSymbol || "COMMIT"
+                } and give grants to contributors.`}
+              >
+                <FontAwesomeIcon
+                  icon={faInfoCircle}
+                  style={{ cursor: "pointer" }}
+                />
+              </OverlayTooltip>
+            </div>
             <Card.Body>
               <Card.Title className={"text-primary"}>
                 Mintable COMMIT
-                <OverlayTooltip
-                  tip={`Governance can mint more ${
-                    workhardCtx?.metadata.commitSymbol || "COMMIT"
-                  } and give grants to contributors.`}
-                  text={`❔`}
-                />
               </Card.Title>
               <Card.Text style={{ fontSize: "2rem" }}>
                 {bigNumToFixed(mintable || 0)}
@@ -268,13 +275,19 @@ const Dashboard = () => {
         </Col>
         <Col md={3} style={{ padding: 0 }}>
           <Card>
+            <div style={{ position: "absolute", right: "1rem", top: "1rem" }}>
+              <OverlayTooltip
+                tip={`A stablecoin to tokenize your revenue stream. Pay your workers with value-added money.`}
+              >
+                <FontAwesomeIcon
+                  icon={faInfoCircle}
+                  style={{ cursor: "pointer" }}
+                />
+              </OverlayTooltip>
+            </div>
             <Card.Body>
               <Card.Title className={"text-primary"}>
                 Burned {workhardCtx?.metadata.commitSymbol || "COMMIT"}
-                <OverlayTooltip
-                  tip={`A stablecoin to tokenize your revenue stream. Pay your workers with value-added money.`}
-                  text={`❔`}
-                />
               </Card.Title>
               <Card.Text style={{ fontSize: "2rem" }}>
                 {bigNumToFixed(burnedCommit || 0)}
@@ -288,15 +301,21 @@ const Dashboard = () => {
         </Col>
         <Col md={3} style={{ padding: 0 }}>
           <Card>
+            <div style={{ position: "absolute", right: "1rem", top: "1rem" }}>
+              <OverlayTooltip
+                tip={`Liquid stock options for your project. Believers are ${
+                  workhardCtx?.metadata.visionSymbol || "VISION"
+                } long term HODLers. Unbelievers can easily exit.`}
+              >
+                <FontAwesomeIcon
+                  icon={faInfoCircle}
+                  style={{ cursor: "pointer" }}
+                />
+              </OverlayTooltip>
+            </div>
             <Card.Body>
               <Card.Title className={"text-primary"}>
                 Total {workhardCtx?.metadata.visionSymbol || "VISION"}
-                <OverlayTooltip
-                  tip={`Liquid stock options for your project. Believers are ${
-                    workhardCtx?.metadata.visionSymbol || "VISION"
-                  } long term HODLers. Unbelievers can easily exit.`}
-                  text={`❔`}
-                />
               </Card.Title>
               <Card.Text style={{ fontSize: "2rem" }}>
                 {bigNumToFixed(visionSupply || 0)}
@@ -310,16 +329,22 @@ const Dashboard = () => {
         </Col>
         <Col md={3} style={{ padding: 0 }}>
           <Card>
-            <Card.Body>
-              <Card.Title className={"text-primary"}>
-                Total {workhardCtx?.metadata.rightSymbol || "RIGHT"}
-                <OverlayTooltip
-                  tip={`
+            <div style={{ position: "absolute", right: "1rem", top: "1rem" }}>
+              <OverlayTooltip
+                tip={`
                   Reward your long term ${
                     workhardCtx?.metadata.visionSymbol || "VISION"
                   } believers with access to devidends and voting power.`}
-                  text={`❔`}
+              >
+                <FontAwesomeIcon
+                  icon={faInfoCircle}
+                  style={{ cursor: "pointer" }}
                 />
+              </OverlayTooltip>
+            </div>
+            <Card.Body>
+              <Card.Title className={"text-primary"}>
+                Total {workhardCtx?.metadata.rightSymbol || "RIGHT"}
               </Card.Title>
               <Card.Text style={{ fontSize: "2rem" }}>
                 {bigNumToFixed(rightSupply || 0)}

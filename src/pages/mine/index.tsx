@@ -122,7 +122,7 @@ const Mine = observer(() => {
               totalEmission={mineStore.emission}
               emissionWeightSum={mineStore.emissionWeightSum}
               apy={mineStore.apy(addr)}
-              collapsible
+              tvl={mineStore.tvl(addr)}
             />
           </div>
         );
@@ -131,16 +131,9 @@ const Mine = observer(() => {
 
   return (
     <Page>
-      <TitleButSer
-        link="https://whf.gitbook.io/docs/mine#main-pools"
-        hint={
-          "Got some hard earned cYAPE wages? Prove your dedication and belief by mining your project's on-chain stock option, or LP YAPE!"
-        }
-      >
-        Featured mining pools
-      </TitleButSer>
+      <h2>Featured mining pools</h2>
       <Row>
-        <Col md={6}>
+        <Col md={4}>
           {mineStore.pools &&
             mineStore.liquidityMiningIdx() !== -1 &&
             workhardCtx &&
@@ -160,21 +153,20 @@ const Mine = observer(() => {
                 tokenName={`${
                   workhardCtx?.metadata.visionSymbol || "VISION"
                 }/ETH LP`}
-                link={
-                  chainId === 1
-                    ? `https://app.sushi.com/add/ETH/${workhardCtx.dao.vision.address}`
-                    : `https://app.uniswap.org/#/add/v2/ETH/${workhardCtx.dao.vision.address}`
-                }
+                link={`https://yape.exchange/#/add/ETH/${workhardCtx.dao.vision.address}`}
                 poolAddress={workhardCtx.periphery.liquidityMining.address}
                 totalEmission={mineStore.emission}
                 emissionWeightSum={mineStore.emissionWeightSum}
                 apy={mineStore.apy(
                   workhardCtx.periphery.liquidityMining.address
                 )}
+                tvl={mineStore.tvl(
+                  workhardCtx.periphery.liquidityMining.address
+                )}
               />
             )}
         </Col>
-        <Col md={6}>
+        <Col md={4}>
           {mineStore.pools &&
             mineStore.commitMiningIdx() !== -1 &&
             workhardCtx &&
@@ -183,7 +175,7 @@ const Mine = observer(() => {
                 poolIdx={mineStore.commitMiningIdx()}
                 title={"Commit Mining"}
                 tokenName={workhardCtx.metadata.commitSymbol}
-                description={`Show your true, long-term belief in your project. Burn ${
+                description={`Show your true, long-term belief in Yapeswap. Burn ${
                   workhardCtx && workhardCtx.daoId !== 0
                     ? `${workhardCtx.metadata.commitName}(${workhardCtx.metadata.commitSymbol})`
                     : "$COMMIT"
@@ -200,6 +192,7 @@ const Mine = observer(() => {
                   mineStore.apy(workhardCtx.periphery.commitMining.address) ||
                   NaN
                 }
+                tvl={mineStore.tvl(workhardCtx.periphery.commitMining.address)}
                 maxAPY={mineStore.maxAPY(
                   workhardCtx.periphery.commitMining.address
                 )}
@@ -207,21 +200,14 @@ const Mine = observer(() => {
             )}
         </Col>
       </Row>
-
-      {subPools.length > 0 && (
-        <>
-          <br />
-          <br />
-          <TitleButSer link="https://whf.gitbook.io/docs/mine#sub-pools">
-            YAPE mining pools!
-          </TitleButSer>
-          <Row>
-            {subPools.map((subPool) => (
-              <Col md={4}>{subPool}</Col>
-            ))}
-          </Row>
-        </>
-      )}
+      <br />
+      <br />
+      <h2>YAPE mining pools!</h2>
+      <Row>
+        {subPools.map((subPool) => (
+          <Col md={4}>{subPool}</Col>
+        ))}
+      </Row>
       {initialContributor && initialContributorPool && (
         <>
           <br />

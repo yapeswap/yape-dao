@@ -97,10 +97,8 @@ export const BuyCommit: React.FC<BuyCommitProps> = observer(({ style }) => {
   }, [account, workhardCtx, approveTxStatus, blockNumber]);
 
   return (
-    <Card border={"primary"} style={style}>
-      <Card.Header className="text-primary border-primary bg-white">
-        Buy
-      </Card.Header>
+    <Card style={style}>
+      <Card.Header>Buy</Card.Header>
       <Card.Body>
         <Row>
           <Col md={7}>
@@ -146,6 +144,7 @@ export const BuyCommit: React.FC<BuyCommitProps> = observer(({ style }) => {
               workhardCtx?.metadata.commitSymbol || `$COMMIT`
             }`}
           </Card.Text>
+          <br />
           <ConditionalButton
             variant={"outline-danger"}
             className={"text-danger"}
@@ -163,6 +162,10 @@ export const BuyCommit: React.FC<BuyCommitProps> = observer(({ style }) => {
                 ? "Approving contract"
                 : "Buying"
             }
+            style={{
+              position: "absolute",
+              bottom: "1rem",
+            }}
             children={
               approveTxStatus === TxStatus.PENDING
                 ? "Approving..."
