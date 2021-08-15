@@ -2,6 +2,7 @@
   "appName": "Yapeswap DAO",
   "daoId": 3,
   "pool2Factory": "0x46aDc1C052Fafd590F56C42e379d7d16622835a2",
+  "feeManager": "0x44DeD95dB022FeA1C78a5a909a337291F0D081b6",
   "projects": {
     "banned": [],
     "featured": []

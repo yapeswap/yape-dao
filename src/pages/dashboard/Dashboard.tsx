@@ -159,9 +159,7 @@ const Dashboard = () => {
           />
         </Col>
         <Col md={8}>
-          <h2>
-            What is <b>{metadata?.name}?</b>
-          </h2>
+          <h2>Welcome to Yapeswap DAO page!</h2>
           <p>{metadata?.description}</p>
           <p className={"text-primary"}>
             <strong>
@@ -414,7 +412,7 @@ const Dashboard = () => {
                 ],
                 [
                   "Yapeswap FeeManager",
-                  "0x669708a561Bc1F4fCd086775f422c66B4d1Fc2E2",
+                  "0x44DeD95dB022FeA1C78a5a909a337291F0D081b6",
                 ],
                 [
                   `${workhardCtx?.metadata.visionSymbol}/ETH LP`,

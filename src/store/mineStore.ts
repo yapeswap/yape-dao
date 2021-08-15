@@ -28,6 +28,9 @@ export class MineStore {
   @observable public decimals: {
     [poolAddr: string]: number;
   } = {};
+  @observable public symbols: {
+    [poolAddr: string]: string;
+  } = {};
   @observable public distributable: boolean = false;
   @observable public visionPrice: number | undefined = 0;
   @observable public commitPrice: number | undefined = 0;
@@ -75,6 +78,22 @@ export class MineStore {
       await this.loadBaseToken(poolAddr);
     }
     return this.baseTokens[poolAddr];
+  };
+
+  @get
+  symbol = (erc20: string): string => {
+    if (!this.symbols[erc20]) {
+      this.loadSymbol(erc20);
+    }
+    return this.symbols[erc20];
+  };
+
+  @get
+  decimal = (erc20: string): number => {
+    if (!this.decimals[erc20]) {
+      this.loadDecimal(erc20);
+    }
+    return this.decimals[erc20];
   };
 
   @get
@@ -142,6 +161,7 @@ export class MineStore {
       this.ethPerVision = ethPerVision;
       this.visionPrice = this.ethPrice * ethPerVision;
     }
+    return this.visionPrice;
   };
 
   @action
@@ -370,7 +390,7 @@ export class MineStore {
   @action
   loadDecimal = async (erc20: string): Promise<number> => {
     let decimal = this.decimals[erc20];
-    if (!decimal && !!this.lib) {
+    if (decimal === undefined && !!this.lib) {
       try {
         decimal = await ERC20__factory.connect(
           erc20,
@@ -413,5 +433,18 @@ export class MineStore {
       ).baseToken();
       this.baseTokens[poolAddr] = baseToken;
     }
+  };
+  @action
+  loadSymbol = async (erc20: string): Promise<string> => {
+    let symbol = this.symbols[erc20];
+    if (!symbol && !!this.lib) {
+      symbol = await ERC20__factory.connect(
+        erc20,
+        this.lib.web3.library
+      ).symbol();
+      this.symbols[erc20] = symbol;
+    }
+    console.log("Fetched symbol is", symbol);
+    return symbol;
   };
 }

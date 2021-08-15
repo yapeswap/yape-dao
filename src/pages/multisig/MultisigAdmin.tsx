@@ -11,6 +11,7 @@ import { useWeb3React } from "@web3-react/core";
 import { providers } from "ethers";
 import { ProjectDetails } from "./tabs/ProjectDetails";
 import { SerHelpPlz } from "../../components/views/HelpSer";
+import { FeeManager } from "../../components/contracts/fee-manager/FeeManager";
 
 export const MultisigAdmin = () => {
   const history = useHistory();
@@ -57,6 +58,9 @@ export const MultisigAdmin = () => {
                 <Nav.Link eventKey="emission">Emission setting</Nav.Link>
               </Nav.Item>
               <Nav.Item>
+                <Nav.Link eventKey="fee-manager">Fee manager</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
                 <Nav.Link eventKey="transaction">Multisig transaction</Nav.Link>
               </Nav.Item>
             </Nav>
@@ -87,6 +91,37 @@ export const MultisigAdmin = () => {
                 }}
               >
                 <SetEmission />
+              </Tab.Pane>
+              <Tab.Pane
+                eventKey="fee-manager"
+                onEnter={() => {
+                  history.push("/multisig/fee-manager");
+                }}
+              >
+                <FeeManager
+                  tokens={[
+                    "0x6B175474E89094C44Da98b954EedeAC495271d0F", // DAI
+                    "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", // USDC
+                    "0xdAC17F958D2ee523a2206206994597C13D831ec7", // USDT
+                    "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599", // WBTC
+                    "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", // WETH
+                    "0x757BC268bd50DA88b2d0cf1966652B18e56CA803", // YAPE
+                  ]}
+                  lps={[
+                    "0x670120d4833633466C7DB4B515c53fa8C5B33B97",
+                    "0x46aDc1C052Fafd590F56C42e379d7d16622835a2",
+                    "0x670120d4833633466C7DB4B515c53fa8C5B33B97",
+                    "0x8e5b9D85C8BBd309F571dba0c82DdacAcA897805",
+                    "0xE3b43bE5aB96629493F948229EFBEe2c0787Ed25",
+                    "0xEC5ED926ed8cFE13dae06Ed5649d0C497F2216B6",
+                    "0x0415Af9F90a1F774eDC426047d945b474417c0AA",
+                    "0x435566318b61d0e4c8e17302ac2FA9e3D6b564bd",
+                    "0x4A034E9E5C9AE28A8D56506c0aB2FD06D67144da",
+                    "0x386A1b3f23F6B6046604842356911DCF0273a56b",
+                    "0xB8eF9ae19bAcd37bfeD71495b98B10A6f0370C0d",
+                    "0x23c1653E9e13Eefe2e1b5954Bfef00a2DB0483b6",
+                  ]}
+                />
               </Tab.Pane>
               <Tab.Pane
                 eventKey="transaction"
