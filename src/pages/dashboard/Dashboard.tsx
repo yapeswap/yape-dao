@@ -405,12 +405,16 @@ const Dashboard = () => {
                 ["Token Emitter", workhardCtx?.dao.visionEmitter.address],
                 ["Voting Escrow", workhardCtx?.dao.votingEscrow.address],
                 [
-                  "Commit Mining Pool",
-                  workhardCtx?.periphery.commitMining.address,
+                  "Yapeswap Router",
+                  "0xCC00b641305c639D9f2b3c34067C69679EE1DBEF",
                 ],
                 [
-                  "Liquidity Mining Pool",
-                  workhardCtx?.periphery.liquidityMining.address,
+                  "Yapeswap Factory",
+                  "0x46aDc1C052Fafd590F56C42e379d7d16622835a2",
+                ],
+                [
+                  "Yapeswap FeeManager",
+                  "0x669708a561Bc1F4fCd086775f422c66B4d1Fc2E2",
                 ],
                 [
                   `${workhardCtx?.metadata.visionSymbol}/ETH LP`,
