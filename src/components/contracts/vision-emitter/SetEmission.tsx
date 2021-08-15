@@ -214,8 +214,10 @@ export const SetEmission = () => {
                   }}
                 />
                 <Button
-                  variant={"light"}
+                  variant={"outline-primary"}
                   style={{
+                    backgroundColor: "transparent",
+                    borderColor: "transparent",
                     position: "absolute",
                     top: "0.5rem",
                     right: "0.5rem",
