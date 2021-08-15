@@ -107,10 +107,11 @@ export const ProjectBox: React.FC<ProjectProps> = ({ projId, active }) => {
             }}
           >
             <Image
-              src={uriToURL(
-                metadata?.image ||
-                  "QmZ6WAhrUArQPQHQZFJBaQnHDcu5MhcrnfyfX4uwLHWMj1"
-              )}
+              src={
+                metadata?.image
+                  ? uriToURL(metadata?.image)
+                  : process.env.PUBLIC_URL + "/images/YAPE-TOKEN.png"
+              }
             />
           </Card>
           <Col md={12} style={{ marginBottom: "1rem" }}>

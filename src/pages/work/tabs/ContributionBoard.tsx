@@ -79,7 +79,7 @@ export const ContributionBoard: React.FC = () => {
               <Nav.Link eventKey="post">Post a project</Nav.Link>
             </Nav.Item>
           </Nav>
-          <hr />
+          {/* <hr />
           <Button
             variant="outline-info"
             as={"a"}
@@ -89,7 +89,7 @@ export const ContributionBoard: React.FC = () => {
             Do you have a project idea?
             <br />
             Go to workhard forum!
-          </Button>
+          </Button> */}
         </Col>
         <Col sm={9}>
           <Tab.Content>

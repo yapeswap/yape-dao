@@ -204,10 +204,9 @@ export const CreateProject: React.FC<{
                 src={
                   previewURL
                     ? previewURL
-                    : uriToURL(
-                        imageURI ||
-                          "QmZ6WAhrUArQPQHQZFJBaQnHDcu5MhcrnfyfX4uwLHWMj1"
-                      )
+                    : imageURI
+                    ? uriToURL(imageURI)
+                    : process.env.PUBLIC_URL + "/images/YAPE-TOKEN.png"
                 }
               />
             </Card>
