@@ -212,13 +212,12 @@ const Mine = observer(() => {
         <>
           <br />
           <TitleButSer link="https://whf.gitbook.io/docs/mine#icsp">
-            Early Stage Contributors Pool!
+            Initial Contributors' Pool!
           </TitleButSer>
           <p>
-            Congratulations! You can mine for more $VISION here with your
-            special early stage contributor tokens! Keep in mind that if you
-            completely withdraw, you will lose out on more $VISION emission
-            rewards.
+            Congratulations! You can mine for more YAPE here with your special
+            early stage contributor tokens! Keep in mind that if you completely
+            withdraw, you will lose out on more YAPE emission rewards.
           </p>
           <InitialContributorSharePool
             poolAddress={initialContributorPool}

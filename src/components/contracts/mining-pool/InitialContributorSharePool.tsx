@@ -190,7 +190,7 @@ export const InitialContributorSharePool: React.FC<InitialContributorSharePoolPr
   return (
     <Card>
       <Card.Header>
-        <h5>Early Stage Contributor Share Pool</h5>
+        <h5>Initial Contributor Share Pool</h5>
       </Card.Header>
       <Card.Body>
         <Row>
