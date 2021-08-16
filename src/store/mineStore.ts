@@ -251,9 +251,8 @@ export class MineStore {
     }
 
     const apy =
-      100 * ((visionPerYear * (this.visionPrice || 0)) / (lpPrice || NaN)) -
-      100;
-    this.apys[this.lib.periphery.commitMining.address] = apy;
+      100 * ((visionPerYear * (this.visionPrice || 0)) / (lpPrice || NaN));
+    this.apys[pool] = apy;
     this.tvls[pool] =
       parseFloat(formatUnits(totalMiners, await this.loadDecimal(baseToken))) *
       lpPrice;
