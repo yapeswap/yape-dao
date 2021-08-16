@@ -281,10 +281,16 @@ export class MineStore {
           100;
         this.apys[this.lib.periphery.commitMining.address] = apy;
         this.maxApys[this.lib.periphery.commitMining.address] = undefined;
+        this.tvls[this.lib.periphery.commitMining.address] = parseFloat(
+          formatEther(totalMiners)
+        );
       } else {
         const apy = 100 * (visionPerYear * (this.visionPrice || 0)) - 100;
         this.apys[this.lib.periphery.commitMining.address] = apy * 0.5;
         this.maxApys[this.lib.periphery.commitMining.address] = apy;
+        this.tvls[this.lib.periphery.commitMining.address] = parseFloat(
+          formatEther(totalMiners)
+        );
       }
     }
   };

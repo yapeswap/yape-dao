@@ -448,7 +448,7 @@ export const ERC20BurnMiningV1: React.FC<ERC20BurnMiningV1Props> = ({
               </Card.Text>
             </Col>
           </Row>
-          Total: {usdFormatter.format(tvl)}
+          Total: {usdFormatter.format(tvl).replace("$", "")} cYAPE
         </Card.Body>
       </Card>
     </div>
