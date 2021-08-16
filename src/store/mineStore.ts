@@ -240,18 +240,19 @@ export class MineStore {
 
     let visionPerYear: number;
     try {
+      const yearlyMiningRatePerStakedToken = (await miningPool.miningRate())
+        .mul(86400 * 365)
+        .div(totalMiners)
+        .div(10000)
+        .toNumber();
       visionPerYear = totalMiners.eq(0)
         ? Infinity
-        : (await miningPool.miningRate())
-            .div(totalMiners)
-            .mul(86400 * 365)
-            .toNumber();
+        : yearlyMiningRatePerStakedToken;
     } catch {
-      visionPerYear = Infinity;
+      visionPerYear = NaN;
     }
-
     const apy =
-      100 * ((visionPerYear * (this.visionPrice || 0)) / (lpPrice || NaN));
+      1000000 * ((visionPerYear / (lpPrice || NaN)) * (this.visionPrice || 0));
     this.apys[pool] = apy;
     this.tvls[pool] =
       parseFloat(formatUnits(totalMiners, await this.loadDecimal(baseToken))) *
@@ -450,7 +451,6 @@ export class MineStore {
       ).symbol();
       this.symbols[erc20] = symbol;
     }
-    console.log("Fetched symbol is", symbol);
     return symbol;
   };
 }
