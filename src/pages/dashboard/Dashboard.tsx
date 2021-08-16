@@ -160,7 +160,11 @@ const Dashboard = () => {
         </Col>
         <Col md={8}>
           <h2>Welcome to Yapeswap DAO page!</h2>
-          <p>{metadata?.description}</p>
+          <p>
+            Yapeswap is a new AMM concept that enables users to get more yield
+            by investing the idle token reserves in liquidity pools into other
+            yield farming or aggregator services like Yearn Finance.
+          </p>
           <p className={"text-primary"}>
             <strong>
               {remainingTime === 0
