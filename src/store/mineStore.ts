@@ -237,12 +237,19 @@ export class MineStore {
       this.lib.web3.library
     );
     const totalMiners = await miningPool.totalMiners();
-    const visionPerYear = totalMiners.eq(0)
-      ? Infinity
-      : (await miningPool.miningRate())
-          .mul(86400 * 365)
-          .div(totalMiners)
-          .toNumber();
+
+    let visionPerYear: number;
+    try {
+      visionPerYear = totalMiners.eq(0)
+        ? Infinity
+        : (await miningPool.miningRate())
+            .div(totalMiners)
+            .mul(86400 * 365)
+            .toNumber();
+    } catch {
+      visionPerYear = Infinity;
+    }
+
     const apy =
       100 * ((visionPerYear * (this.visionPrice || 0)) / (lpPrice || NaN)) -
       100;
