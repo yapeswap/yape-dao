@@ -45,12 +45,12 @@ const StableReserve: React.FC = () => {
               as={`a`}
               variant={"outline-warning"}
               className={"text-warning"}
-              children={`Go to dex`}
+              children={`Go to swap`}
               style={{
                 position: "absolute",
                 bottom: "1rem",
               }}
-              href={`https://app.uniswap.org/#/swap?inputCurrency=${workhardCtx?.dao.baseCurrency.address}&outputCurrency=${workhardCtx?.dao.commit.address}&use=V3`}
+              href={`https://app.yape.exchange/#/swap?inputCurrency=${workhardCtx?.dao.baseCurrency.address}&outputCurrency=${workhardCtx?.dao.commit.address}&use=V3`}
               target="_blank"
             />
           </Card.Body>
