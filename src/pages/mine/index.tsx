@@ -20,6 +20,7 @@ import { useBlockNumber } from "../../providers/BlockNumberProvider";
 import { MiningPool } from "../../components/views/MiningPool";
 import { Link } from "react-router-dom";
 import { useStores } from "../../hooks/user-stores";
+import { WETH_ADDRESS, YAPE_ADDRESS } from "../../constants";
 
 const Mine = observer(() => {
   const { addToast } = useToasts();
@@ -163,6 +164,7 @@ const Mine = observer(() => {
                 tvl={mineStore.tvl(
                   workhardCtx.periphery.liquidityMining.address
                 )}
+                tokens={[WETH_ADDRESS, YAPE_ADDRESS]}
               />
             )}
         </Col>

@@ -442,7 +442,6 @@ export const ERC20StakeMiningV1: React.FC<ERC20StakeMiningV1Props> = ({
                     tokens &&
                     `https://app.yape.exchange/#/add/ETH/${tokens[0]}/${tokens[1]}`
                   }
-                  disabled={!tokens}
                   target={"blank"}
                 >
                   Go to add liquidity{" "}
