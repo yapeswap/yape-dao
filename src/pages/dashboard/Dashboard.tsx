@@ -227,9 +227,9 @@ const Dashboard = () => {
           </h2>
           <EmissionChart {...emissionRule} />
           <p>
-            Emission started at{" "}
+            Project launched at{" "}
             {emissionStarted && new Date(emissionStarted * 1000).toDateString()}{" "}
-            and its first distribution was{" "}
+            and its emission started at{" "}
             {emissionStarted &&
               new Date(
                 emissionStarted * 1000 + 86400 * 7 * 1000
