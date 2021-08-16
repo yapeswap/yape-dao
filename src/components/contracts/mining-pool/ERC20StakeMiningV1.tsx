@@ -440,7 +440,7 @@ export const ERC20StakeMiningV1: React.FC<ERC20StakeMiningV1Props> = ({
                   as={"a"}
                   href={
                     tokens &&
-                    `https://app.yape.exchange/#/add/ETH/${tokens[0]}/${tokens[1]}`
+                    `https://app.yape.exchange/#/add/${tokens[0]}/${tokens[1]}`
                   }
                   target={"blank"}
                 >

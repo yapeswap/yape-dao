@@ -154,7 +154,7 @@ const Mine = observer(() => {
                 tokenName={`${
                   workhardCtx?.metadata.visionSymbol || "VISION"
                 }/ETH LP`}
-                link={`https://yape.exchange/#/add/ETH/${workhardCtx.dao.vision.address}`}
+                link={`https://app.yape.exchange/#/add/ETH/${workhardCtx.dao.vision.address}`}
                 poolAddress={workhardCtx.periphery.liquidityMining.address}
                 totalEmission={mineStore.emission}
                 emissionWeightSum={mineStore.emissionWeightSum}
@@ -175,7 +175,7 @@ const Mine = observer(() => {
             mineStore.emissionWeightSum && (
               <ERC20BurnMiningV1
                 poolIdx={mineStore.commitMiningIdx()}
-                title={"Commit Mining"}
+                title={"Commit Mining (burn cYAPE)"}
                 tokenName={workhardCtx.metadata.commitSymbol}
                 description={`Show your true, long-term belief in Yapeswap. Burn ${
                   workhardCtx && workhardCtx.daoId !== 0
