@@ -32,6 +32,7 @@ import {
 import IPFS from "ipfs-core/src/components";
 import { Dispatch, SetStateAction } from "react";
 import { AddToast } from "react-toast-notifications";
+import { YAPE_ADDRESS } from "../constants";
 import { WorkhardLibrary } from "../providers/WorkhardProvider";
 import { ERC165, PoolType } from "./ERC165Interfaces";
 
@@ -516,6 +517,9 @@ export const humanReadablePoolType = (poolType?: string): string => {
 };
 
 export const getTokenLogo = (address: string): string => {
+  if (address === YAPE_ADDRESS) {
+    return process.env.PUBLIC_URL + "/images/lucy.png";
+  }
   return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${getAddress(
     address
   )}/logo.png`;
