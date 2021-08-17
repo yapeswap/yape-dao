@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Page from "../../layouts/Page";
 import { Image, Col, Row, Card, Button, Table } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { EmissionChart } from "../../components/views/EmissionChart";
 import { useWorkhard } from "../../providers/WorkhardProvider";
 import { BigNumber } from "@ethersproject/bignumber";
@@ -11,9 +11,8 @@ import {
   errorHandler,
   fetchProjectMetadataFromIPFS,
   ProjectMetadata,
-  uriToURL,
 } from "../../utils/utils";
-import { getAddress } from "ethers/lib/utils";
+import { formatEther, getAddress } from "ethers/lib/utils";
 import { useIPFS } from "../../providers/IPFSProvider";
 import { OverlayTooltip } from "../../components/OverlayTooltip";
 import { Erc20Balance } from "../../components/contracts/erc20/Erc20Balance";
@@ -25,11 +24,13 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Allocation } from "../../components/contracts/vision-emitter/Allocation";
 import { useBlockNumber } from "../../providers/BlockNumberProvider";
 import { useGlobalData } from "../../yape-info/contexts/GlobalData";
+import { useStores } from "../../hooks/user-stores";
 
 const Dashboard = () => {
+  const history = useHistory();
   const { addToast } = useToasts();
   const globalData = useGlobalData();
-  console.log(JSON.stringify(globalData));
+  const { mineStore } = useStores();
 
   const workhardCtx = useWorkhard();
   const { daoId } = workhardCtx || { daoId: 0 };
@@ -55,7 +56,7 @@ const Dashboard = () => {
   const [baseCurrencySymbol, setBaseCurrencySymbol] = useState<string>();
   const [visionSupply, setVisionSupply] = useState<BigNumber>();
   const [rightSupply, setRightSupply] = useState<BigNumber>();
-  const [remainingTime, setRemainingTime] = useState<number>();
+  const [veAPY, setVeAPY] = useState<number[]>();
 
   useEffect(() => {
     if (daoId === 0) {
@@ -125,27 +126,22 @@ const Dashboard = () => {
   }, [workhardCtx, daoId, ipfs]);
 
   useEffect(() => {
-    setRemainingTime(
-      Math.max(1629131191 - Math.floor(Date.now() / 1000), 0) / 3600
-    );
-  }, [blockNumber]);
+    if (globalData.totalVolumeUSD) {
+      mineStore.loadInitialData().then(() => {
+        const [minRev, maxRev] = [
+          mineStore.minYearnRev(),
+          mineStore.maxYearnRev(),
+        ].map(
+          (rev) => rev + parseFloat(globalData.totalVolumeUSD) * 0.0015 * 365
+        );
 
-  const poolName = (address: string): string => {
-    if (workhardCtx) {
-      if (
-        getAddress(address) ===
-        getAddress(workhardCtx.periphery.liquidityMining.address)
-      ) {
-        return "Liquidity Providers";
-      } else if (
-        getAddress(address) ===
-        getAddress(workhardCtx.periphery.commitMining.address)
-      ) {
-        return "Commit Burners";
-      }
+        const lockedValue =
+          mineStore.getVisionPrice() *
+          parseFloat(formatEther(rightSupply || 0));
+        setVeAPY([minRev, maxRev].map((rev) => (100 * rev) / lockedValue));
+      });
     }
-    return address;
-  };
+  }, [workhardCtx, daoId, rightSupply, globalData.totalVolumeUSD]);
 
   const fetching = (
     <Page>
@@ -167,13 +163,6 @@ const Dashboard = () => {
             Yapeswap is a new AMM concept that enables users to get more yield
             by investing the idle token reserves in liquidity pools into other
             yield farming or aggregator services like Yearn Finance.
-          </p>
-          <p className={"text-primary"}>
-            <strong>
-              {remainingTime === 0
-                ? `Emission started!`
-                : `Emission starts in ${remainingTime?.toFixed(1)} hours!`}
-            </strong>
           </p>
         </Col>
       </Row>
@@ -250,13 +239,35 @@ const Dashboard = () => {
         <b>Statistics</b>
       </h2>
       <Row>
-        <Col md={3} style={{ padding: 0 }}>
+        <Col md={4} style={{ padding: 0 }}>
+          <Card>
+            {/* <div style={{ position: "absolute", right: "1rem", top: "1rem" }}>
+              <OverlayTooltip
+                tip={`
+                  Reward your long term ${
+                    workhardCtx?.metadata.visionSymbol || "VISION"
+                  } believers with access to devidends and voting power.`}
+              >
+                <FontAwesomeIcon
+                  icon={faInfoCircle}
+                  style={{ cursor: "pointer" }}
+                />
+              </OverlayTooltip>
+            </div> */}
+            <Card.Body>
+              <Card.Title className={"text-primary"}>TVL</Card.Title>
+              <Card.Text style={{ fontSize: "2rem" }}>
+                {parseFloat(globalData.totalVolumeUSD).toFixed(2)}
+                <span style={{ fontSize: "1rem" }}> {`USD`}</span>
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={4} style={{ padding: 0 }}>
           <Card>
             <div style={{ position: "absolute", right: "1rem", top: "1rem" }}>
               <OverlayTooltip
-                tip={`Governance can mint more ${
-                  workhardCtx?.metadata.commitSymbol || "COMMIT"
-                } and give grants to contributors.`}
+                tip={`More TVL brings more fee sharing from Yearn!`}
               >
                 <FontAwesomeIcon
                   icon={faInfoCircle}
@@ -265,74 +276,17 @@ const Dashboard = () => {
               </OverlayTooltip>
             </div>
             <Card.Body>
-              <Card.Title className={"text-primary"}>
-                Mintable COMMIT
-              </Card.Title>
+              <Card.Title className={"text-primary"}>veYAPE APY</Card.Title>
               <Card.Text style={{ fontSize: "2rem" }}>
-                {bigNumToFixed(mintable || 0)}
+                {veAPY ? `${veAPY[0].toFixed(0)} ~ ${veAPY[1].toFixed(0)}` : ``}
                 <span style={{ fontSize: "1rem" }}>
-                  {" "}
-                  {`$${baseCurrencySymbol}`}
+                  {veAPY ? "%" : "fetching..."}
                 </span>
               </Card.Text>
             </Card.Body>
           </Card>
         </Col>
-        <Col md={3} style={{ padding: 0 }}>
-          <Card>
-            <div style={{ position: "absolute", right: "1rem", top: "1rem" }}>
-              <OverlayTooltip
-                tip={`A stablecoin to tokenize your revenue stream. Pay your workers with value-added money.`}
-              >
-                <FontAwesomeIcon
-                  icon={faInfoCircle}
-                  style={{ cursor: "pointer" }}
-                />
-              </OverlayTooltip>
-            </div>
-            <Card.Body>
-              <Card.Title className={"text-primary"}>
-                Burned {workhardCtx?.metadata.commitSymbol || "COMMIT"}
-              </Card.Title>
-              <Card.Text style={{ fontSize: "2rem" }}>
-                {bigNumToFixed(burnedCommit || 0)}
-                <span style={{ fontSize: "1rem" }}>
-                  {" "}
-                  {`$${workhardCtx?.metadata.commitSymbol || "COMMIT"}`}
-                </span>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={3} style={{ padding: 0 }}>
-          <Card>
-            <div style={{ position: "absolute", right: "1rem", top: "1rem" }}>
-              <OverlayTooltip
-                tip={`Liquid stock options for your project. Believers are ${
-                  workhardCtx?.metadata.visionSymbol || "VISION"
-                } long term HODLers. Unbelievers can easily exit.`}
-              >
-                <FontAwesomeIcon
-                  icon={faInfoCircle}
-                  style={{ cursor: "pointer" }}
-                />
-              </OverlayTooltip>
-            </div>
-            <Card.Body>
-              <Card.Title className={"text-primary"}>
-                Total {workhardCtx?.metadata.visionSymbol || "VISION"}
-              </Card.Title>
-              <Card.Text style={{ fontSize: "2rem" }}>
-                {bigNumToFixed(visionSupply || 0)}
-                <span style={{ fontSize: "1rem" }}>
-                  {" "}
-                  {`$${workhardCtx?.metadata.visionSymbol || "VISION"}`}
-                </span>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={3} style={{ padding: 0 }}>
+        <Col md={4} style={{ padding: 0 }}>
           <Card>
             <div style={{ position: "absolute", right: "1rem", top: "1rem" }}>
               <OverlayTooltip
@@ -356,6 +310,82 @@ const Dashboard = () => {
                 <span style={{ fontSize: "1rem" }}>
                   {" "}
                   {`$${workhardCtx?.metadata.rightSymbol || "RIGHT"}`}
+                </span>
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={4} style={{ padding: 0 }}>
+          <Card>
+            <div style={{ position: "absolute", right: "1rem", top: "1rem" }}>
+              <OverlayTooltip
+                tip={`= Mintable amount of cYAPE. Governance can mint more cYAPE and give grants to contributors.`}
+              >
+                <FontAwesomeIcon
+                  icon={faInfoCircle}
+                  style={{ cursor: "pointer" }}
+                />
+              </OverlayTooltip>
+            </div>
+            <Card.Body>
+              <Card.Title className={"text-primary"}>Reserved DAI</Card.Title>
+              <Card.Text style={{ fontSize: "2rem" }}>
+                {bigNumToFixed(mintable || 0)}
+                <span style={{ fontSize: "1rem" }}>
+                  {" "}
+                  {`$${baseCurrencySymbol}`}
+                </span>
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={4} style={{ padding: 0 }}>
+          <Card>
+            <div style={{ position: "absolute", right: "1rem", top: "1rem" }}>
+              <OverlayTooltip
+                tip={`True Yape's believers burned their cYAPE to get more YAPE.`}
+              >
+                <FontAwesomeIcon
+                  icon={faInfoCircle}
+                  style={{ cursor: "pointer" }}
+                />
+              </OverlayTooltip>
+            </div>
+            <Card.Body>
+              <Card.Title className={"text-primary"}>
+                Burned {workhardCtx?.metadata.commitSymbol || "COMMIT"}
+              </Card.Title>
+              <Card.Text style={{ fontSize: "2rem" }}>
+                {bigNumToFixed(burnedCommit || 0)}
+                <span style={{ fontSize: "1rem" }}>
+                  {" "}
+                  {`$${workhardCtx?.metadata.commitSymbol || "COMMIT"}`}
+                </span>
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={4} style={{ padding: 0 }}>
+          <Card>
+            <div style={{ position: "absolute", right: "1rem", top: "1rem" }}>
+              <OverlayTooltip
+                tip={`Liquid stock options for your project. Believers are ${
+                  workhardCtx?.metadata.visionSymbol || "VISION"
+                } long term HODLers. Unbelievers can easily exit.`}
+              >
+                <FontAwesomeIcon
+                  icon={faInfoCircle}
+                  style={{ cursor: "pointer" }}
+                />
+              </OverlayTooltip>
+            </div>
+            <Card.Body>
+              <Card.Title className={"text-primary"}>Total supply</Card.Title>
+              <Card.Text style={{ fontSize: "2rem" }}>
+                {bigNumToFixed(visionSupply || 0)}
+                <span style={{ fontSize: "1rem" }}>
+                  {" "}
+                  {`$${workhardCtx?.metadata.visionSymbol || "VISION"}`}
                 </span>
               </Card.Text>
             </Card.Body>

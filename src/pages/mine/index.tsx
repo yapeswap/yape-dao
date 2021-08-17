@@ -43,11 +43,7 @@ const Mine = observer(() => {
   useEffect(() => {
     if (!!dao && account && library) {
       const signer = library.getSigner(account);
-      mineStore.loadPools().then(async () => {
-        await mineStore.loadVisionPrice();
-        await mineStore.loadCommitPrice();
-        mineStore.loadAPYs();
-      });
+      mineStore.loadPools();
       mineStore.isDistributable(signer);
       dao.visionEmitter
         .initialContributorShare()

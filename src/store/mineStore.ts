@@ -9,12 +9,21 @@ import { weiToEth } from "../utils/utils";
 import { ERC20__factory, MiningPool__factory } from "@workhard/protocol";
 import { getPool, getPoolAddress, getPoolContract } from "../utils/uniV3";
 import { UniswapV2Pair__factory } from "@workhard/protocol/dist/build/@uniswap";
+import {
+  getYearnVaultData,
+  MAX_SHARE_FACTOR,
+  MIN_SHARE_FACTOR,
+  YearnVaultData,
+} from "../utils/yearn";
 
 export class MineStore {
   @observable public lib: WorkhardLibrary | undefined;
   @observable public pools: string[] = [];
+  @observable public yearnData: { [tokenAddr: string]: YearnVaultData } = {};
   @observable public apys: { [poolAddr: string]: number } = {};
   @observable public tvls: { [poolAddr: string]: number } = {};
+  @observable public minRevs: { [poolAddr: string]: number } = {};
+  @observable public maxRevs: { [poolAddr: string]: number } = {};
   @observable public maxApys: { [poolAddr: string]: number | undefined } = {};
   @observable public lpBase: {
     [poolAddr: string]: { token0: string; token1: string };
@@ -22,7 +31,7 @@ export class MineStore {
   @observable public baseTokens: {
     [poolAddr: string]: string;
   } = {};
-  @observable public tokenPrices: {
+  @observable public coingeckoPriceData: {
     [poolAddr: string]: number;
   } = {};
   @observable public decimals: {
@@ -68,6 +77,12 @@ export class MineStore {
   };
 
   @get
+  getVisionPrice = () => {
+    this.loadVisionPrice();
+    return this.visionPrice || NaN;
+  };
+
+  @get
   maxAPY = (poolAddress: string) => {
     return this.maxApys[poolAddress] || NaN;
   };
@@ -86,6 +101,24 @@ export class MineStore {
       this.loadSymbol(erc20);
     }
     return this.symbols[erc20];
+  };
+
+  @get
+  minYearnRev = (): number => {
+    return this.pools
+      .map((addr) => {
+        return this.minRevs[addr] || 0;
+      })
+      .reduce((acc, rev) => acc + rev, 0);
+  };
+
+  @get
+  maxYearnRev = (): number => {
+    return this.pools
+      .map((addr) => {
+        return this.maxRevs[addr] || 0;
+      })
+      .reduce((acc, rev) => acc + rev, 0);
   };
 
   @get
@@ -111,8 +144,14 @@ export class MineStore {
   @action
   init = async (whfLibrary: WorkhardLibrary | undefined) => {
     this.lib = whfLibrary;
-    this.loadPools();
-    this.loadEthPrice();
+    await this.loadInitialData();
+  };
+
+  @action
+  loadInitialData = async () => {
+    await this.loadPools();
+    await this.loadYearnData();
+    await this.loadAPYs();
   };
 
   @action
@@ -124,10 +163,14 @@ export class MineStore {
 
   @action
   getTokenPrice = async (token: string): Promise<number> => {
-    if (!this.tokenPrices[token]) {
-      this.tokenPrices[token] = (await getPriceFromCoingecko(token)) || NaN;
+    if (!this.yearnData[token]) {
+      await this.loadYearnData();
     }
-    return this.tokenPrices[token];
+    if (!this.yearnData[token]) {
+      this.coingeckoPriceData[token] =
+        (await getPriceFromCoingecko(token)) || NaN;
+    }
+    return this.yearnData[token]?.tvl.price || this.coingeckoPriceData[token];
   };
 
   @action
@@ -142,6 +185,9 @@ export class MineStore {
       this.pools = _pools;
       this.initialContributorPool = await this.lib.dao.visionEmitter.initialContributorPool();
     }
+    await this.loadVisionPrice();
+    await this.loadCommitPrice();
+    await this.loadAPYs();
   };
 
   @action
@@ -185,16 +231,18 @@ export class MineStore {
 
   @action
   loadAPYs = async () => {
+    const promises = [];
     if (this.pools && this.lib) {
       for (let pool of this.pools) {
         if (pool === this.lib.periphery.commitMining.address) {
-          this.loadCommitMiningAPY();
+          promises.push(this.loadCommitMiningAPY());
         } else {
-          this.loadLiquidityMiningAPY(pool);
+          promises.push(this.loadLiquidityMiningAPY(pool));
         }
       }
-      this.loadInitialContributorSharePoolAPY();
+      promises.push(this.loadInitialContributorSharePoolAPY());
     }
+    return Promise.all(promises);
   };
 
   @action
@@ -254,9 +302,52 @@ export class MineStore {
     const apy =
       1000000 * ((visionPerYear / (lpPrice || NaN)) * (this.visionPrice || 0));
     this.apys[pool] = apy;
-    this.tvls[pool] =
+    const tvl =
       parseFloat(formatUnits(totalMiners, await this.loadDecimal(baseToken))) *
       lpPrice;
+    this.tvls[pool] = tvl;
+    await this.loadYearnRevenues(pool, baseToken, tvl);
+  };
+
+  @action
+  loadYearnRevenues = async (
+    pool: string,
+    baseToken: string,
+    pairTVL: number
+  ) => {
+    const tokens = await this.lpBaseTokens(baseToken);
+    if (!tokens) throw Error("Failed to find tokens.");
+    if (!this.yearnData[tokens[0]]) {
+      await this.loadYearnData();
+    }
+    const tvl = pairTVL * 0.5;
+    const { minRev, maxRev } = tokens
+      .map((token) => {
+        const yearnData = this.yearnData[token];
+        if (!yearnData)
+          return {
+            minRev: 0,
+            maxRev: 0,
+          };
+        const yearnFeeInYearly =
+          (yearnData.apy.fees.management || 0) * tvl +
+          (yearnData.apy.fees.performance || 0) * tvl * yearnData.apy.gross_apr;
+        const yearnRevenueInYearly = tvl * yearnData.apy.net_apy;
+        const rev = {
+          minRev: yearnRevenueInYearly + yearnFeeInYearly * MIN_SHARE_FACTOR,
+          maxRev: yearnRevenueInYearly + yearnFeeInYearly * MAX_SHARE_FACTOR,
+        };
+        return rev;
+      })
+      .reduce(
+        (acc, revenue) => ({
+          minRev: acc.minRev + revenue.minRev,
+          maxRev: acc.maxRev + revenue.maxRev,
+        }),
+        { minRev: 0, maxRev: 0 }
+      );
+    this.minRevs[pool] = minRev;
+    this.maxRevs[pool] = maxRev;
   };
 
   @action
@@ -396,7 +487,7 @@ export class MineStore {
       totalVal = 0;
     }
     const lpPrice = totalVal / Number.parseFloat(formatEther(supply));
-    this.tokenPrices[lpToken] = lpPrice;
+    this.coingeckoPriceData[lpToken] = lpPrice;
     return lpPrice;
   };
 
@@ -458,5 +549,12 @@ export class MineStore {
       this.symbols[erc20] = symbol;
     }
     return symbol;
+  };
+  @action
+  loadYearnData = async (): Promise<void> => {
+    const yearnData = await getYearnVaultData();
+    yearnData?.forEach((data) => {
+      this.yearnData[data.token.address] = data;
+    });
   };
 }
