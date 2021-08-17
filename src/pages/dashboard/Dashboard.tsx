@@ -257,7 +257,7 @@ const Dashboard = () => {
             <Card.Body>
               <Card.Title className={"text-primary"}>TVL</Card.Title>
               <Card.Text style={{ fontSize: "2rem" }}>
-                {parseFloat(globalData.totalVolumeUSD).toFixed(2)}
+                {parseFloat(globalData.totalLiquidityUSD).toFixed(2)}
                 <span style={{ fontSize: "1rem" }}> {`USD`}</span>
               </Card.Text>
             </Card.Body>
