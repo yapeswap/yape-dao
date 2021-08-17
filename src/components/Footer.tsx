@@ -12,7 +12,7 @@ const Footer = () => (
             <a href="#top">Back to top</a>
           </li>
           <li className="float-lg-left" style={{ marginRight: 10 }}>
-            <a href="https://forum.workhard.finance">Forum</a>
+            <a href="https://forum.yape.exchange">Forum</a>
           </li>
           <li className="float-lg-left" style={{ marginRight: 10 }}>
             <a href="https://discord.gg/jUjE6Y4q6u">Discord</a>
@@ -25,6 +25,9 @@ const Footer = () => (
           </li>
           <li className="float-lg-left" style={{ marginRight: 10 }}>
             <a href="https://yapeswapdao.medium.com">Medium</a>
+          </li>
+          <li className="float-lg-left" style={{ marginRight: 10 }}>
+            <a href="https://snapshot.org/#/yape.eth">Snapshot</a>
           </li>
           {/* <li className="float-lg-left" style={{ marginRight: 10 }}>
             <Link to={"/res"}>Resources</Link>
