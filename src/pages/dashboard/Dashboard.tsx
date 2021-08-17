@@ -278,9 +278,11 @@ const Dashboard = () => {
             <Card.Body>
               <Card.Title className={"text-primary"}>veYAPE APY</Card.Title>
               <Card.Text style={{ fontSize: "2rem" }}>
-                {veAPY ? `${veAPY[0].toFixed(0)} ~ ${veAPY[1].toFixed(0)}` : ``}
+                {veAPY && veAPY[0] > 0
+                  ? `${veAPY[0].toFixed(0)} ~ ${veAPY[1].toFixed(0)}`
+                  : ``}
                 <span style={{ fontSize: "1rem" }}>
-                  {veAPY ? "%" : "fetching..."}
+                  {veAPY && veAPY[0] > 0 ? "%" : "fetching..."}
                 </span>
               </Card.Text>
             </Card.Body>
