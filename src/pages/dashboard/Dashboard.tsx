@@ -24,9 +24,12 @@ import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Allocation } from "../../components/contracts/vision-emitter/Allocation";
 import { useBlockNumber } from "../../providers/BlockNumberProvider";
+import { useGlobalData } from "../../yape-info/contexts/GlobalData";
 
 const Dashboard = () => {
   const { addToast } = useToasts();
+  const globalData = useGlobalData();
+  console.log(JSON.stringify(globalData));
 
   const workhardCtx = useWorkhard();
   const { daoId } = workhardCtx || { daoId: 0 };
