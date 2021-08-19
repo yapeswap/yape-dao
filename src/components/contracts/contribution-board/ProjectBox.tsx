@@ -83,9 +83,7 @@ export const ProjectBox: React.FC<ProjectProps> = ({ projId, active }) => {
 
   return (
     <Card style={{ height: "22.5rem" }}>
-      <Card.Header>
-        #{projId.toNumber()} {metadata?.name}
-      </Card.Header>
+      <Card.Header>{metadata?.name}</Card.Header>
       <Card.Body>
         <Row>
           <Col md={12} style={{ marginBottom: "1rem" }}>
