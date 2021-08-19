@@ -206,6 +206,13 @@ export const ERC20BurnMiningV1: React.FC<ERC20BurnMiningV1Props> = ({
       alert("Not connected");
       return;
     }
+    if (
+      !window.confirm(
+        "You are burning your cYAPE! NOT Staking.\n\nBurning your cYAPE means you're acquiring YAPE instead of redeemable DAI! The jungle is pleased with your dedication."
+      )
+    ) {
+      return;
+    }
     if (!isApproved(allowance, amount)) {
       alert("Not approved");
       return;
@@ -234,6 +241,13 @@ export const ERC20BurnMiningV1: React.FC<ERC20BurnMiningV1Props> = ({
   const exit = () => {
     if (!account) {
       alert("Not connected");
+      return;
+    }
+    if (
+      !window.confirm(
+        "Are you aware of what you're doing? If you withdraw your mined YAPE, you won't be able to earn any more rewards"
+      )
+    ) {
       return;
     }
     const signer = library.getSigner(account);
