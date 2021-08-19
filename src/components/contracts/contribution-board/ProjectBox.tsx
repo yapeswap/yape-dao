@@ -10,7 +10,7 @@ import {
   fetchProjectMetadataFromIPFS,
   ProjectMetadata,
   uriToURL,
-  wrapUrl,
+  wrapText,
 } from "../../../utils/utils";
 import { useIPFS } from "../../../providers/IPFSProvider";
 import { useToasts } from "react-toast-notifications";
@@ -115,7 +115,7 @@ export const ProjectBox: React.FC<ProjectProps> = ({ projId, active }) => {
           <Col md={12} style={{ marginBottom: "1rem" }}>
             <Card.Title>Details</Card.Title>
             <Card.Text style={{ overflow: "auto", height: "5rem" }}>
-              {ReactHtmlParser(wrapUrl(metadata?.description || ""))}
+              {ReactHtmlParser(wrapText(metadata?.description || ""))}
             </Card.Text>
             {minimumShare && minimumShare.gt(0) && (
               <OverlayTooltip

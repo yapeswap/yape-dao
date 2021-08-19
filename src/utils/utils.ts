@@ -8,13 +8,10 @@ import EthersSafe, {
 } from "@gnosis.pm/safe-core-sdk";
 import {
   IERC20__factory,
-  DAO,
   getNetworkName,
   MyNetwork,
-  GnosisSafe__factory,
   ERC721__factory,
   ERC1155__factory,
-  Workhard,
   ERC20__factory,
 } from "@workhard/protocol";
 import deployed from "@workhard/protocol/deployed.json";
@@ -66,6 +63,14 @@ export const wrapUrl = (text: string) => {
   // the {1} is to handle this bug: blog.stevenlevithan.com/archives/regex-lookahead-bug
   const regex = /(http|ftp|https:\/\/[\w\-_]+\.{1}[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?/gi;
   return text.replace(regex, '<a href="$1$2" target="_blank">$1$2</a>');
+};
+
+export const wrapLineBreak = (text: string) => {
+  return text.replace(/(?:\r\n|\r|\n)/g, "<br>");
+};
+
+export const wrapText = (text: string) => {
+  return wrapLineBreak(wrapUrl(text));
 };
 
 export const acceptableTokenList = (chainId?: number) => {

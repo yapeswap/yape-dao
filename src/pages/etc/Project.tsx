@@ -25,7 +25,7 @@ import {
   fetchProjectMetadataFromIPFS,
   ProjectMetadata,
   uriToURL,
-  wrapUrl,
+  wrapText,
 } from "../../utils/utils";
 import { ExecuteBudget } from "../../components/contracts/contribution-board/ExecuteBudget";
 import { useIPFS } from "../../providers/IPFSProvider";
@@ -184,7 +184,7 @@ export const Project: React.FC = () => {
             <Col md={6}>
               <Card.Subtitle>Description</Card.Subtitle>
               <Card.Text>
-                {ReactHtmlParser(wrapUrl(metadata?.description || ""))}
+                {ReactHtmlParser(wrapText(metadata?.description || ""))}
               </Card.Text>
               {minimumShare && minimumShare.gt(0) && (
                 <Badge variant={`success`}>initial contributor program</Badge>
