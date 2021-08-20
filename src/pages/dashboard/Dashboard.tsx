@@ -141,7 +141,13 @@ const Dashboard = () => {
         setVeAPY([minRev, maxRev].map((rev) => (100 * rev) / lockedValue));
       });
     }
-  }, [workhardCtx, daoId, rightSupply, globalData.totalVolumeUSD]);
+  }, [
+    workhardCtx,
+    daoId,
+    rightSupply,
+    globalData.totalVolumeUSD,
+    mineStore.visionPrice,
+  ]);
 
   const fetching = (
     <Page>
