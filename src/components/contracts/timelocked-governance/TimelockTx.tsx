@@ -403,7 +403,12 @@ export const TimelockTx: React.FC<TimelockTxProps> = ({
           {decodedTxData?.map((decoded, i) => (
             <Card key={`timelock-tx-${i}`}>
               <Card.Header>
-                <Accordion.Toggle as={Button} variant="link" eventKey={`${i}`}>
+                <Accordion.Toggle
+                  as={Button}
+                  variant="link"
+                  className={"text-primary"}
+                  eventKey={`${i}`}
+                >
                   {decoded.contractName} - {decoded.methodName}
                 </Accordion.Toggle>
               </Card.Header>
