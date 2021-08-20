@@ -133,7 +133,7 @@ export const ERC20StakeMiningV1: React.FC<ERC20StakeMiningV1Props> = ({
         .catch(errorHandler(addToast));
       getTokenDetailsFromCoingecko(tokenAddress)
         .then(setTokenDetails)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
       const pool = ERC20StakeMiningV1__factory.connect(poolAddress, library);
       pool
         .dispatchedMiners(account)

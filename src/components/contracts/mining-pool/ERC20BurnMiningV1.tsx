@@ -129,10 +129,10 @@ export const ERC20BurnMiningV1: React.FC<ERC20BurnMiningV1Props> = ({
         .catch(errorHandler(addToast));
       getPriceFromCoingecko(tokenAddress)
         .then(setTokenPrice)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
       getTokenDetailsFromCoingecko(tokenAddress)
         .then(setTokenDetails)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
       const pool = ERC20BurnMiningV1__factory.connect(poolAddress, library);
       pool
         .dispatchedMiners(account)
