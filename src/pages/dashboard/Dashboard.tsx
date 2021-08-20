@@ -411,36 +411,9 @@ const Dashboard = () => {
             </thead>
             <tbody>
               {[
-                ["Workhard Project Contract", workhardCtx?.project.address],
-                ["Multisig", workhardCtx?.dao.multisig.address],
-                ["Timelock", workhardCtx?.dao.timelock.address],
-                [
-                  workhardCtx?.metadata.visionName,
-                  workhardCtx?.dao.vision.address,
-                ],
-                [
-                  workhardCtx?.metadata.commitName,
-                  workhardCtx?.dao.commit.address,
-                ],
-                [
-                  workhardCtx?.metadata.rightName,
-                  workhardCtx?.dao.right.address,
-                ],
-                [
-                  workhardCtx?.metadata.baseCurrencySymbol,
-                  workhardCtx?.dao.baseCurrency.address,
-                ],
-                ["Stable Reserve", workhardCtx?.dao.stableReserve.address],
-                [
-                  "Contribution Board",
-                  workhardCtx?.dao.contributionBoard.address,
-                ],
-                ["Marketplace", workhardCtx?.dao.marketplace.address],
-                ["Dividend Pool", workhardCtx?.dao.dividendPool.address],
-                ["Vote Counter", workhardCtx?.dao.voteCounter.address],
-                ["Workers Union", workhardCtx?.dao.workersUnion.address],
-                ["Token Emitter", workhardCtx?.dao.visionEmitter.address],
-                ["Voting Escrow", workhardCtx?.dao.votingEscrow.address],
+                ["YAPE", workhardCtx?.dao.vision.address],
+                ["cYAPE", workhardCtx?.dao.commit.address],
+                ["veYAPE", workhardCtx?.dao.right.address],
                 [
                   "Yapeswap Router",
                   "0xCC00b641305c639D9f2b3c34067C69679EE1DBEF",
@@ -453,10 +426,29 @@ const Dashboard = () => {
                   "Yapeswap FeeManager",
                   "0x44DeD95dB022FeA1C78a5a909a337291F0D081b6",
                 ],
+                ["Dividend Pool", workhardCtx?.dao.dividendPool.address],
+                ["Token Emitter", workhardCtx?.dao.visionEmitter.address],
                 [
                   `${workhardCtx?.metadata.visionSymbol}/ETH LP`,
                   workhardCtx?.periphery.visionLP.address,
                 ],
+                ["Workhard Project Contract", workhardCtx?.project.address],
+                ["Multisig", workhardCtx?.dao.multisig.address],
+                ["Timelock", workhardCtx?.dao.timelock.address],
+
+                [
+                  workhardCtx?.metadata.baseCurrencySymbol,
+                  workhardCtx?.dao.baseCurrency.address,
+                ],
+                ["Stable Reserve", workhardCtx?.dao.stableReserve.address],
+                [
+                  "Contribution Board",
+                  workhardCtx?.dao.contributionBoard.address,
+                ],
+                ["Marketplace", workhardCtx?.dao.marketplace.address],
+                ["Vote Counter", workhardCtx?.dao.voteCounter.address],
+                ["Workers Union", workhardCtx?.dao.workersUnion.address],
+                ["Voting Escrow", workhardCtx?.dao.votingEscrow.address],
               ].map((contract) => (
                 <tr>
                   <td>{contract[0]}</td>
