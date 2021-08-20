@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Page from "../../layouts/Page";
-import { Col, Row } from "react-bootstrap";
+import { Alert, Button, Col, Row } from "react-bootstrap";
 import { ERC20StakeMiningV1 } from "../../components/contracts/mining-pool/ERC20StakeMiningV1";
 import { useWorkhard } from "../../providers/WorkhardProvider";
 import { BigNumber } from "@ethersproject/bignumber";
@@ -128,6 +128,16 @@ const Mine = observer(() => {
 
   return (
     <Page>
+      {mineStore.distributable && (
+        <Alert variant={"info"}>
+          You just discovered a YAPE mine. Please call that smart contract
+          function now.
+          {"  "}
+          <Button onClick={distribute} variant={"info"}>
+            distribute()
+          </Button>
+        </Alert>
+      )}
       <h2>Featured mining pools</h2>
       <Row>
         <Col md={4}>
