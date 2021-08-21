@@ -129,11 +129,14 @@ const Mine = observer(() => {
   return (
     <Page>
       {mineStore.distributable && (
-        <Alert variant={"info"}>
+        <Alert variant="primary">
           You just discovered a YAPE mine. Please call that smart contract
           function now.
-          {"  "}
-          <Button onClick={distribute} variant={"info"}>
+          <Button
+            style={{ marginLeft: "2rem" }}
+            onClick={distribute}
+            variant="warning"
+          >
             distribute()
           </Button>
         </Alert>

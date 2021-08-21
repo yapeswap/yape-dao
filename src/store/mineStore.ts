@@ -262,13 +262,20 @@ export class MineStore {
   };
 
   @action
-  isDistributable = (account: Signer | Provider) => {
+  isDistributable = async (account: Signer | Provider) => {
     if (this.lib) {
-      this.lib.dao.visionEmitter
-        .connect(account)
-        .estimateGas.distribute()
-        .then((_) => (this.distributable = true))
-        .catch((_) => (this.distributable = false));
+      const [emissionStarted, emissionWeekNum, block] = await Promise.all([
+        this.lib.dao.visionEmitter.emissionStarted(),
+        this.lib.dao.visionEmitter.emissionWeekNum(),
+        this.lib.web3.library.getBlock("latest"),
+      ]);
+      const week = 60 * 60 * 24 * 7;
+      const remaining =
+        week -
+        (block.timestamp -
+          emissionStarted.toNumber() -
+          week * emissionWeekNum.toNumber());
+      this.distributable = remaining <= 0;
     }
   };
 
