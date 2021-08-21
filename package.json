@@ -29,7 +29,7 @@
     "@web3-react/walletconnect-connector": "^6.1.6",
     "@web3-react/walletlink-connector": "^6.1.6",
     "@workhard/protocol": "1.0.4",
-    "@workhard/utils": "^0.1.5",
+    "@workhard/utils": "^0.1.8",
     "@yapeswap/yape-sdk": "^1.0.0-rc.3",
     "apollo-cache-inmemory": "^1.6.3",
     "apollo-client": "^2.6.4",

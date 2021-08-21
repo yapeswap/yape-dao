@@ -25,6 +25,7 @@ import { Allocation } from "../../components/contracts/vision-emitter/Allocation
 import { useBlockNumber } from "../../providers/BlockNumberProvider";
 import { useGlobalData } from "../../yape-info/contexts/GlobalData";
 import { useStores } from "../../hooks/user-stores";
+import { YAPE_FEE_MANAGER } from "../../constants";
 
 const Dashboard = () => {
   const history = useHistory();
@@ -428,6 +429,7 @@ const Dashboard = () => {
                   "Yapeswap Factory",
                   "0x46aDc1C052Fafd590F56C42e379d7d16622835a2",
                 ],
+                ["Yapeswap FeeManager2", YAPE_FEE_MANAGER],
                 [
                   "Yapeswap FeeManager",
                   "0x44DeD95dB022FeA1C78a5a909a337291F0D081b6",

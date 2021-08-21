@@ -14,18 +14,43 @@ import { MiningPool__factory } from "@workhard/protocol";
 import { useWeb3React } from "@web3-react/core";
 import { randomBytes } from "ethers/lib/utils";
 import { RewindLP } from "./RewindLP";
+import { DistributeRevenue } from "./DistributeRevenue";
+import { YAPE_ADDRESS, YAPE_FEE_MANAGER } from "../../../constants";
+import { useStores } from "../../../hooks/user-stores";
+import { useBlockNumber } from "../../../providers/BlockNumberProvider";
 import config from "../../../config.json";
-import { DistributeReward } from "./DistributeRevenue";
-import { USDC_ADDRESS, YAPE_ADDRESS } from "../../../constants";
+import { RewindAll } from "./RewindAll";
 
 export const FeeManager: React.FC<{
   tokens: string[];
   lps: string[];
 }> = ({ tokens, lps }) => {
+  const { account, library } = useWeb3React<providers.Web3Provider>();
+  const { addToast } = useToasts();
+  const { mineStore } = useStores();
+  const { blockNumber } = useBlockNumber();
+  const [balance, setBalance] = useState<BigNumber>();
+  const [txStatus, setTxStatus] = useState<TxStatus>();
+
   // const rewardToken = YAPE_ADDRESS
-  const rewardToken = USDC_ADDRESS;
+  const rewardToken = YAPE_ADDRESS;
+  const feeManager = YAPE_FEE_MANAGER;
   return (
     <Container>
+      <Row>
+        <Col md={6}>
+          <h2>Rewind all</h2>
+          <RewindAll tokens={lps} feeManager={feeManager} />
+        </Col>
+        <Col md={6}>
+          <h2>Distribute</h2>
+          <DistributeRevenue
+            rewardToken={rewardToken}
+            feeManager={feeManager}
+          />
+        </Col>
+      </Row>
+      <hr />
       <h2>Tokens</h2>
       <Row>
         {tokens
@@ -35,20 +60,20 @@ export const FeeManager: React.FC<{
               <BuyBack
                 token={token}
                 rewardToken={rewardToken}
-                feeManager={config.feeManager}
+                feeManager={feeManager}
               />
             </Col>
           ))}
       </Row>
-      {/* <hr />
+      <hr />
       <h2>LPs</h2>
       <Row>
         {lps?.map((token) => (
           <Col md={6}>
-            <RewindLP token={token} rewardToken={token} />
+            <RewindLP lpToken={token} feeManager={feeManager} />
           </Col>
         ))}
-      </Row> */}
+      </Row>
     </Container>
   );
 };

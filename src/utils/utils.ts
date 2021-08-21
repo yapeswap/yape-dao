@@ -3,6 +3,7 @@ import { Log } from "@ethersproject/abstract-provider";
 import { getAddress } from "@ethersproject/address";
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { formatEther, parseEther } from "@ethersproject/units";
+import { abi as IUniswapV2FactoryABI } from "@uniswap/v2-core/build/IUniswapV2Factory.json";
 import EthersSafe, {
   SafeTransactionDataPartial,
 } from "@gnosis.pm/safe-core-sdk";
@@ -29,7 +30,7 @@ import {
 import IPFS from "ipfs-core/src/components";
 import { Dispatch, SetStateAction } from "react";
 import { AddToast } from "react-toast-notifications";
-import { YAPE_ADDRESS } from "../constants";
+import { YAPE_ADDRESS, YAPE_FACTORY } from "../constants";
 import { WorkhardLibrary } from "../providers/WorkhardProvider";
 import { ERC165, PoolType } from "./ERC165Interfaces";
 
@@ -161,12 +162,14 @@ export function decodeTxDetails(
   data: string,
   value: BigNumber
 ): DecodedTxData {
+  const yapeFactory = new Contract(YAPE_FACTORY, IUniswapV2FactoryABI);
   const contracts = [
     ...(Object.entries(workhard.dao) as Array<[string, Contract]>),
     ...(Object.entries(workhard.commons) as Array<[string, Contract]>),
-    ...(Object.entries({ Project: workhard.project }) as Array<
-      [string, Contract]
-    >),
+    ...(Object.entries({
+      Project: workhard.project,
+      YapeFactory: yapeFactory,
+    }) as Array<[string, Contract]>),
   ];
   const targetContract = contracts.find(
     ([_, contract]) => getAddress(target) === getAddress(contract.address)

@@ -41,7 +41,7 @@ export const BuyBack: React.FC<{
   const [txStatus, setTxStatus] = useState<TxStatus>();
   const [price, setPrice] = useState<number>();
   const [decimal, setDecimal] = useState<number>();
-  const [asset, setAsset] = useState<string>();
+  const [value, setValue] = useState<string>();
   const [route, setRoute] = useState<{
     amountIn: BigNumber;
     amountOut: BigNumber;
@@ -53,13 +53,14 @@ export const BuyBack: React.FC<{
     ERC20__factory.connect(token, library)
       .balanceOf(feeManager)
       .then(setBalance);
-  }, [token, library]);
+  }, [token, library, blockNumber]);
 
   useEffect(() => {
     if (!library) return;
     mineStore.loadDecimal(token).then(setDecimal);
     mineStore.getTokenPrice(token).then(setPrice);
   }, [library, token]);
+
   const usdFormatter = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -68,7 +69,7 @@ export const BuyBack: React.FC<{
   useEffect(() => {
     if (!balance || !price || !decimal) return;
     const revenue = parseFloat(formatUnits(balance, decimal)) * price;
-    setAsset(usdFormatter.format(revenue > 0 ? revenue : 0));
+    setValue(usdFormatter.format(revenue > 0 ? revenue : 0));
   }, [price, balance, decimal]);
 
   useEffect(() => {
@@ -168,23 +169,16 @@ export const BuyBack: React.FC<{
         <Card.Title>{mineStore.symbol(token)}</Card.Title>
       </Card.Header>
       <Card.Body>
-        <Row>
-          <Col md={6}>
-            <Card.Text>
-              Amount
-              <br />
-              {balance && formatUnits(balance, decimal)}
-            </Card.Text>
-          </Col>
-          <Col md={6}>
-            <Card.Text>
-              Value
-              <br />
-              {asset}
-            </Card.Text>
-          </Col>
-        </Row>
-        <br />
+        <Card.Text>
+          Amount
+          <br />
+          {balance && formatUnits(balance, decimal)}
+        </Card.Text>
+        <Card.Text>
+          Value
+          <br />
+          {value}
+        </Card.Text>
         <ConditionalButton
           enabledWhen={!!route}
           whyDisabled={"Not enough balance or failed to find the path."}

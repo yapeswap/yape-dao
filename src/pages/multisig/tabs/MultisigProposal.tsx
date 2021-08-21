@@ -43,6 +43,7 @@ export const MultisigProposal: React.FC = ({}) => {
           "Marketplace",
           "VotingEscrowLock",
           "WorkersUnion",
+          "YapeFactory",
         ].map((name) => (
           <Button
             style={{ margin: "0.2rem" }}

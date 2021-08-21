@@ -109,8 +109,6 @@ export const MultisigAdmin = () => {
                   ]}
                   lps={[
                     "0x670120d4833633466C7DB4B515c53fa8C5B33B97",
-                    "0x46aDc1C052Fafd590F56C42e379d7d16622835a2",
-                    "0x670120d4833633466C7DB4B515c53fa8C5B33B97",
                     "0x8e5b9D85C8BBd309F571dba0c82DdacAcA897805",
                     "0xE3b43bE5aB96629493F948229EFBEe2c0787Ed25",
                     "0xEC5ED926ed8cFE13dae06Ed5649d0C497F2216B6",

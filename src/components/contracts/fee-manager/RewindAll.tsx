@@ -2,7 +2,7 @@ import { useWeb3React } from "@web3-react/core";
 import { ERC20__factory } from "@workhard/protocol";
 import { FeeManager__factory } from "@workhard/utils";
 import { BigNumber, providers } from "ethers";
-import { formatUnits } from "ethers/lib/utils";
+import { formatEther, formatUnits } from "ethers/lib/utils";
 import React, { useEffect, useState } from "react";
 import { Button, Card } from "react-bootstrap";
 import { useToasts } from "react-toast-notifications";
@@ -11,55 +11,62 @@ import { useBlockNumber } from "../../../providers/BlockNumberProvider";
 import { handleTransaction, TxStatus } from "../../../utils/utils";
 import { ConditionalButton } from "../../ConditionalButton";
 
-export const DistributeRevenue: React.FC<{
-  rewardToken: string;
+export const RewindAll: React.FC<{
+  tokens: string[];
   feeManager: string;
-}> = ({ rewardToken, feeManager }) => {
+}> = ({ tokens, feeManager }) => {
   const { account, library } = useWeb3React<providers.Web3Provider>();
   const { blockNumber } = useBlockNumber();
   const { addToast } = useToasts();
   const { mineStore } = useStores();
 
-  const [balance, setBalance] = useState<BigNumber>();
+  const [balances, setBalances] = useState<BigNumber[]>();
   const [txStatus, setTxStatus] = useState<TxStatus>();
-  const [price, setPrice] = useState<number>();
-  const [decimal, setDecimal] = useState<number>();
-  const [value, setValue] = useState<string>();
+  const [totalVal, setTotalVal] = useState<string>();
   useEffect(() => {
     if (!library) return;
-    ERC20__factory.connect(rewardToken, library)
-      .balanceOf(feeManager)
-      .then(setBalance);
-  }, [rewardToken, library, blockNumber, txStatus]);
+    Promise.all(
+      tokens.map((token) =>
+        ERC20__factory.connect(token, library).balanceOf(feeManager)
+      )
+    ).then(setBalances);
+  }, [tokens, library, blockNumber, txStatus]);
 
-  useEffect(() => {
-    if (!library) return;
-    mineStore.loadDecimal(rewardToken).then(setDecimal);
-    mineStore.loadVisionPrice().then(setPrice);
-  }, [library, rewardToken]);
   const usdFormatter = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
   });
 
   useEffect(() => {
-    if (!balance || !price || !decimal) return;
-    const revenue = parseFloat(formatUnits(balance, decimal)) * price;
-    setValue(usdFormatter.format(revenue > 0 ? revenue : 0));
-  }, [price, balance, decimal]);
+    if (!balances) return;
+    Promise.all(tokens.map((token) => mineStore.loadLPTokenPrice(token))).then(
+      (prices) => {
+        console.log("prices", prices);
+        const sum = prices
+          .map(
+            (price, i) => parseFloat(formatEther(balances[i])) * (price || 0)
+          )
+          .reduce((acc, val) => acc + val, 0);
+        setTotalVal(usdFormatter.format(sum));
+      }
+    );
+  }, [tokens, balances, blockNumber]);
 
-  const distribute = async () => {
+  const rewindAll = async () => {
     if (!account || !library || !blockNumber) {
       alert("Not connected");
       return;
     }
     const signer = library.getSigner(account);
+    const tokensToRewind = tokens.filter(
+      (_, i) => balances && balances[i].gt(0)
+    );
     const fm = FeeManager__factory.connect(feeManager, library);
     handleTransaction(
-      fm.connect(signer).distribute(balance),
+      fm.connect(signer).rewindAll(tokensToRewind),
       setTxStatus,
       addToast,
-      `Successfully distributed!`
+      `Successfully rewinded!`
     );
   };
 
@@ -67,21 +74,18 @@ export const DistributeRevenue: React.FC<{
     <Card>
       <Card.Body>
         <Card.Text>
-          Amount
-          <br />
-          {balance && formatUnits(balance, decimal)}
-        </Card.Text>
-        <Card.Text>
           Value
           <br />
-          {value}
+          {totalVal}
         </Card.Text>
         <ConditionalButton
-          enabledWhen={balance?.gt(0)}
+          enabledWhen={
+            tokens.filter((_, i) => balances && balances[i]?.gt(0)).length > 0
+          }
           whyDisabled={"No YAPE to distribute"}
-          onClick={() => distribute()}
+          onClick={() => rewindAll()}
         >
-          Distribute
+          Rewind all
         </ConditionalButton>
       </Card.Body>
     </Card>

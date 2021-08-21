@@ -8,6 +8,8 @@ import {
   PopulatedTransaction,
 } from "ethers";
 import { defaultAbiCoder } from "ethers/lib/utils";
+import { abi as IUniswapV2FactoryABI } from "@uniswap/v2-core/build/IUniswapV2Factory.json";
+import { YAPE_FACTORY, YAPE_FEE_MANAGER } from "../constants";
 
 export enum PARAM_TYPE {
   ARRAY = "Array",
@@ -48,6 +50,7 @@ export const convertType = (type: PARAM_TYPE, value: string) => {
 };
 
 export const buildPresets = (dao: DAO): Preset[] => {
+  const yapeFactory = new Contract(YAPE_FACTORY, IUniswapV2FactoryABI);
   return [
     {
       contractName: "StableReserve",
@@ -157,6 +160,12 @@ export const buildPresets = (dao: DAO): Preset[] => {
         { name: "voteCounter", type: PARAM_TYPE.STRING },
       ],
       contract: dao.workersUnion,
+    },
+    {
+      contractName: "YapeFactory",
+      methodName: "setFeeTo",
+      paramArray: [{ name: "_feeTo", type: PARAM_TYPE.STRING }],
+      contract: yapeFactory,
     },
     {
       contractName: "Manual",
