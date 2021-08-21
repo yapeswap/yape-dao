@@ -298,7 +298,7 @@ export class MineStore {
       const yearlyMiningRatePerStakedToken = (await miningPool.miningRate())
         .mul(86400 * 365)
         .div(totalMiners)
-        .div(10000)
+        .div(100)
         .toNumber();
       visionPerYear = totalMiners.eq(0)
         ? Infinity
@@ -307,7 +307,7 @@ export class MineStore {
       visionPerYear = NaN;
     }
     const apy =
-      1000000 * ((visionPerYear / (lpPrice || NaN)) * (this.visionPrice || 0));
+      10000 * ((visionPerYear / (lpPrice || NaN)) * (this.visionPrice || 0));
     this.apys[pool] = apy;
     const tvl =
       parseFloat(formatUnits(totalMiners, await this.loadDecimal(baseToken))) *
