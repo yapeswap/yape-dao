@@ -3026,6 +3026,11 @@
   resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-3.4.1-solc-0.7-2.tgz#371c67ebffe50f551c3146a9eec5fe6ffe862e92"
   integrity sha512-tAG9LWg8+M2CMu7hIsqHPaTyG4uDzjr6mhvH96LvOpLZZj6tgzTluBt+LsCf1/QaYrlis6pITvpIaIhE+iZB+Q==
 
+"@openzeppelin/contracts@4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.1.0.tgz#baec89a7f5f73e3d8ea582a78f1980134b605375"
+  integrity sha512-TihZitscnaHNcZgXGj9zDLDyCqjziytB4tMCwXq0XimfWkAjBYyk5/pOsDbbwcavhlc79HhpTEpQcrMnPVa1mw==
+
 "@openzeppelin/contracts@^4.2.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.2.0.tgz#260d921d99356e48013d9d760caaa6cea35dc642"
@@ -5154,7 +5159,7 @@
     dotenv "^8.2.0"
     lowdb "^1.0.0"
 
-"@workhard/utils@^0.1.8":
+"@workhard/utils@0.1.8", "@workhard/utils@^0.1.8":
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/@workhard/utils/-/utils-0.1.8.tgz#9e2a7c0d7cfc1c7df157fa20afd77af208a6016c"
   integrity sha512-EDRa0XeEk5/S/C/oMUgey83H/9ArnaFEk5HMHGuWgWrrbeU7a5S59ZZYH7RD/xer7TmhGvGiPUczm8nxkww0xw==
@@ -5187,6 +5192,15 @@
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
+
+"@yapeswap/yape-core@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@yapeswap/yape-core/-/yape-core-1.0.0.tgz#76d220333be871219d546fcbe1f617ffe4e263a3"
+  integrity sha512-PscCHCojMnXsGey/Uj/Ta4QVmhisR3v/EhWOrocKOVchLp1izN4XUy29Tg9wrbNexza19XRK7AXehBFYYKP7VA==
+  dependencies:
+    "@openzeppelin/contracts" "4.1.0"
+    "@workhard/protocol" "1.0.4"
+    "@workhard/utils" "0.1.8"
 
 "@yapeswap/yape-sdk@^1.0.0-rc.3":
   version "1.0.0-rc.3"

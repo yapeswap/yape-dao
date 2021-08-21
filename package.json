@@ -31,6 +31,7 @@
     "@workhard/protocol": "1.0.4",
     "@workhard/utils": "^0.1.8",
     "@yapeswap/yape-sdk": "^1.0.0-rc.3",
+    "@yapeswap/yape-core": "1.0.0",
     "apollo-cache-inmemory": "^1.6.3",
     "apollo-client": "^2.6.4",
     "apollo-link-http": "^1.5.16",

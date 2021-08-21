@@ -33,6 +33,7 @@ import { AddToast } from "react-toast-notifications";
 import { YAPE_ADDRESS, YAPE_FACTORY } from "../constants";
 import { WorkhardLibrary } from "../providers/WorkhardProvider";
 import { ERC165, PoolType } from "./ERC165Interfaces";
+import { YapeFactory__factory } from "@yapeswap/yape-core";
 
 export const parseLog = (
   contract: {
@@ -162,7 +163,10 @@ export function decodeTxDetails(
   data: string,
   value: BigNumber
 ): DecodedTxData {
-  const yapeFactory = new Contract(YAPE_FACTORY, IUniswapV2FactoryABI);
+  const yapeFactory = YapeFactory__factory.connect(
+    YAPE_FACTORY,
+    workhard.web3.library
+  );
   const contracts = [
     ...(Object.entries(workhard.dao) as Array<[string, Contract]>),
     ...(Object.entries(workhard.commons) as Array<[string, Contract]>),
@@ -177,11 +181,14 @@ export function decodeTxDetails(
   if (targetContract) {
     const [contractName, contract] = targetContract;
     const fragment = contract.interface.getFunction(data.slice(0, 10));
+    console.log("contract name", contractName);
+    console.log("fragment", fragment.name);
     const methodName = fragment.name;
     const result: Result = contract.interface.decodeFunctionData(
       fragment,
       data
     );
+    console.log("decod func data", result);
     const argNames = Object.getOwnPropertyNames(result).filter((name) => {
       return ![
         ...Array(result.length)

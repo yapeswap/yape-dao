@@ -10,6 +10,7 @@ import {
 import { defaultAbiCoder } from "ethers/lib/utils";
 import { abi as IUniswapV2FactoryABI } from "@uniswap/v2-core/build/IUniswapV2Factory.json";
 import { YAPE_FACTORY, YAPE_FEE_MANAGER } from "../constants";
+import { YapeFactory__factory } from "@yapeswap/yape-core";
 
 export enum PARAM_TYPE {
   ARRAY = "Array",
@@ -50,7 +51,10 @@ export const convertType = (type: PARAM_TYPE, value: string) => {
 };
 
 export const buildPresets = (dao: DAO): Preset[] => {
-  const yapeFactory = new Contract(YAPE_FACTORY, IUniswapV2FactoryABI);
+  const yapeFactory = YapeFactory__factory.connect(
+    YAPE_FACTORY,
+    dao.baseCurrency.provider
+  );
   return [
     {
       contractName: "StableReserve",
