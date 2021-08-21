@@ -102,6 +102,10 @@ p {
   color: $red-salsa;
 }
 
+.btn-outline-danger {
+  color: $danger;
+}
+
 .btn-outline-info {
   color: $info;
 }
@@ -122,6 +126,14 @@ p {
   border-bottom-color: rgba(0, 0, 0, 0.125);
   border-bottom-style: solid;
   border-bottom-width: 1px;
+}
+
+.modal-footer {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-top: 1px solid rgba(0, 0, 0, 0.125);
+  border-top-color: rgba(0, 0, 0, 0.125);
+  border-top-style: solid;
+  border-top-width: 1px;
 }
 
 a {
