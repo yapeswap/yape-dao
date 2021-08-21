@@ -19,7 +19,7 @@ import {
   MiningPool__factory,
 } from "@workhard/protocol";
 import {
-  errorHandler,
+  // errorHandler,
   getVariantForProgressBar,
   handleTransaction,
   TxStatus,
@@ -68,13 +68,13 @@ export const InitialContributorSharePool: React.FC<InitialContributorSharePoolPr
       MiningPool__factory.connect(poolAddress, library)
         .baseToken()
         .then(setTokenAddress)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
       workhardCtx.dao.visionEmitter
         .emissionWeight()
         .then((emissions) => {
           setWeight(emissions.dev);
         })
-        .catch(errorHandler(addToast));
+        .catch(console.error);
     }
   }, [account, workhardCtx]);
   useEffect(() => {
@@ -92,21 +92,18 @@ export const InitialContributorSharePool: React.FC<InitialContributorSharePoolPr
       token
         .balanceOf(account, workhardCtx.daoId)
         .then(setTokenBalance)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
       const pool = InitialContributorShare__factory.connect(
         poolAddress,
         library
       );
-      pool
-        .dispatchedMiners(account)
-        .then(setBurnedAmount)
-        .catch(errorHandler(addToast));
-      pool.totalMiners().then(setTotalBurn).catch(errorHandler(addToast));
-      pool.mined(account).then(setMined).catch(errorHandler(addToast));
+      pool.dispatchedMiners(account).then(setBurnedAmount).catch(console.error);
+      pool.totalMiners().then(setTotalBurn).catch(console.error);
+      pool.mined(account).then(setMined).catch(console.error);
       ContributionBoard__factory.connect(tokenAddress, library)
         .isApprovedForAll(account, poolAddress)
         .then(setIsApprovedForAll)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
     }
   }, [account, workhardCtx, tokenAddress, txStatus, blockNumber]);
 

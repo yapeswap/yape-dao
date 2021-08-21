@@ -22,7 +22,7 @@ import {
 } from "@workhard/protocol";
 import { useWorkhard } from "../../../providers/WorkhardProvider";
 import {
-  errorHandler,
+  // errorHandler,
   getTokenLogo,
   getVariantForProgressBar,
   handleTransaction,
@@ -104,11 +104,11 @@ export const ERC20BurnMiningV1: React.FC<ERC20BurnMiningV1Props> = ({
       MiningPool__factory.connect(poolAddress, library)
         .baseToken()
         .then(setTokenAddress)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
       workhardCtx.dao.visionEmitter
         .getPoolWeight(poolIdx)
         .then(setWeight)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
     }
   }, [account, workhardCtx]);
   useEffect(() => {
@@ -123,10 +123,7 @@ export const ERC20BurnMiningV1: React.FC<ERC20BurnMiningV1Props> = ({
   useEffect(() => {
     if (!!account && !!tokenAddress) {
       const token = ERC20__factory.connect(tokenAddress, library);
-      token
-        .balanceOf(account)
-        .then(setTokenBalance)
-        .catch(errorHandler(addToast));
+      token.balanceOf(account).then(setTokenBalance).catch(console.error);
       getPriceFromCoingecko(tokenAddress)
         .then(setTokenPrice)
         .catch(console.error);
@@ -134,16 +131,13 @@ export const ERC20BurnMiningV1: React.FC<ERC20BurnMiningV1Props> = ({
         .then(setTokenDetails)
         .catch(console.error);
       const pool = ERC20BurnMiningV1__factory.connect(poolAddress, library);
-      pool
-        .dispatchedMiners(account)
-        .then(setBurnedAmount)
-        .catch(errorHandler(addToast));
-      pool.totalMiners().then(setTotalBurn).catch(errorHandler(addToast));
-      pool.mined(account).then(setMined).catch(errorHandler(addToast));
+      pool.dispatchedMiners(account).then(setBurnedAmount).catch(console.error);
+      pool.totalMiners().then(setTotalBurn).catch(console.error);
+      pool.mined(account).then(setMined).catch(console.error);
       ERC20__factory.connect(tokenAddress, library)
         .allowance(account, poolAddress)
         .then(setAllowance)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
     }
   }, [account, tokenAddress, txStatus, blockNumber]);
 
@@ -152,7 +146,7 @@ export const ERC20BurnMiningV1: React.FC<ERC20BurnMiningV1Props> = ({
       ERC20__factory.connect(tokenAddress, library)
         .symbol()
         .then(setSymbol)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
     }
   }, [tokenAddress, library]);
 

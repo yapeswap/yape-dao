@@ -24,7 +24,7 @@ import {
   MiningPool__factory,
 } from "@workhard/protocol";
 import {
-  errorHandler,
+  // errorHandler,
   getTokenLogo,
   getVariantForProgressBar,
   handleTransaction,
@@ -107,11 +107,11 @@ export const ERC20StakeMiningV1: React.FC<ERC20StakeMiningV1Props> = ({
       MiningPool__factory.connect(poolAddress, library)
         .baseToken()
         .then(setTokenAddress)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
       workhardCtx.dao.visionEmitter
         .getPoolWeight(poolIdx)
         .then(setWeight)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
     }
   }, [account, workhardCtx]);
 
@@ -127,24 +127,18 @@ export const ERC20StakeMiningV1: React.FC<ERC20StakeMiningV1Props> = ({
   useEffect(() => {
     if (!!account && !!tokenAddress) {
       const token = ERC20__factory.connect(tokenAddress, library);
-      token
-        .balanceOf(account)
-        .then(setTokenBalance)
-        .catch(errorHandler(addToast));
+      token.balanceOf(account).then(setTokenBalance).catch(console.error);
       getTokenDetailsFromCoingecko(tokenAddress)
         .then(setTokenDetails)
         .catch(console.error);
       const pool = ERC20StakeMiningV1__factory.connect(poolAddress, library);
-      pool
-        .dispatchedMiners(account)
-        .then(setStakedAmount)
-        .catch(errorHandler(addToast));
-      pool.totalMiners().then(setTotalStake).catch(errorHandler(addToast));
-      pool.mined(account).then(setMined).catch(errorHandler(addToast));
+      pool.dispatchedMiners(account).then(setStakedAmount).catch(console.error);
+      pool.totalMiners().then(setTotalStake).catch(console.error);
+      pool.mined(account).then(setMined).catch(console.error);
       ERC20__factory.connect(tokenAddress, library)
         .allowance(account, poolAddress)
         .then(setAllowance)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
     }
   }, [account, tokenAddress, txStatus, blockNumber]);
 
@@ -161,7 +155,7 @@ export const ERC20StakeMiningV1: React.FC<ERC20StakeMiningV1Props> = ({
       ERC20__factory.connect(tokenAddress, library)
         .symbol()
         .then(setSymbol)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
     }
   }, [tokenAddress, library]);
 
