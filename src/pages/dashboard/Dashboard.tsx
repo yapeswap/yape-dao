@@ -133,7 +133,7 @@ const Dashboard = () => {
           mineStore.minYearnRev(),
           mineStore.maxYearnRev(),
         ].map(
-          (rev) => rev + parseFloat(globalData.totalVolumeUSD) * 0.0015 * 365
+          (rev) => rev + parseFloat(globalData.totalVolumeUSD) * 0.0005 * 365
         );
 
         const lockedValue =
