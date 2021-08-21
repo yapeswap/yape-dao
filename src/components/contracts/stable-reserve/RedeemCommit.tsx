@@ -78,11 +78,11 @@ export const RedeemCommit: React.FC = observer(() => {
       commitToken
         .balanceOf(account)
         .then(store.setCommitBalance)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
       commitToken
         .allowance(account, workhardCtx.dao.stableReserve.address)
         .then(store.setAllowance)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
     }
   }, [account, workhardCtx, blockNumber]);
   return (

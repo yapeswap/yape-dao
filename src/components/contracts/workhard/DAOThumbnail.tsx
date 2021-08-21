@@ -53,7 +53,7 @@ export const DAOThumbnail: React.FC<DAOThumbnailProps> = ({
             uri,
           });
         })
-        .catch(errorHandler(addToast));
+        .catch(console.error);
     }
   }, [workhardCtx]);
 
@@ -64,7 +64,7 @@ export const DAOThumbnail: React.FC<DAOThumbnailProps> = ({
           setImageURI(projectMetadata.image);
           setDescription(projectMetadata.description);
         })
-        .catch(errorHandler(addToast));
+        .catch(console.error);
     }
   }, [ipfs, daoMetadata]);
 

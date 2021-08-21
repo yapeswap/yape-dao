@@ -43,11 +43,11 @@ export const Distribute: React.FC = () => {
     const { dao } = workhardCtx || {};
     if (!!account && !!dao && !!token && isAddress(token)) {
       const erc20 = IERC20__factory.connect(token, library);
-      erc20.balanceOf(account).then(setBalance).catch(errorHandler(addToast));
+      erc20.balanceOf(account).then(setBalance).catch(console.error);
       erc20
         .allowance(account, dao.dividendPool.address)
         .then(setAllowance)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
     }
   }, [account, token, txStatus]);
 

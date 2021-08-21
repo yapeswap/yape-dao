@@ -46,9 +46,7 @@ export const PoolWeight: React.FC<{
 
   useEffect(() => {
     if (baseToken && library && isAddress(baseToken)) {
-      getTokenType(baseToken, library)
-        .then(setTokenType)
-        .catch(errorHandler(addToast));
+      getTokenType(baseToken, library).then(setTokenType).catch(console.error);
     }
   }, [baseToken]);
 
@@ -56,7 +54,7 @@ export const PoolWeight: React.FC<{
     if (baseToken && library && isAddress(baseToken) && tokenType) {
       getTokenSymbol(baseToken, tokenType, library)
         .then(setTitle)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
     }
   }, [baseToken, tokenType]);
 

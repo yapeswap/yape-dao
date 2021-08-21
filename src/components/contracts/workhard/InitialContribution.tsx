@@ -20,10 +20,7 @@ export const InitialContribution: React.FC<{
   useEffect(() => {
     if (workhardCtx) {
       const { project } = workhardCtx;
-      project
-        .ownerOf(projId)
-        .then(setProjectOwner)
-        .catch(errorHandler(addToast));
+      project.ownerOf(projId).then(setProjectOwner).catch(console.error);
     }
   }, [workhardCtx, projId]);
 

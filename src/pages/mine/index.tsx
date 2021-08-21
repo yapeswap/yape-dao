@@ -48,11 +48,11 @@ const Mine = observer(() => {
       dao.visionEmitter
         .initialContributorShare()
         .then(setInitialContributorShare)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
       dao.visionEmitter
         .initialContributorPool()
         .then(setInitialContributorPool)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
     }
   }, [dao, blockNumber, account, library]);
 

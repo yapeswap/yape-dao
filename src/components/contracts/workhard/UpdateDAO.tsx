@@ -61,7 +61,7 @@ export const UpdateDAO: React.FC<{
           setDescription(metadata.description);
           setURL(metadata.url);
         })
-        .catch(errorHandler(addToast));
+        .catch(console.error);
     }
   }, [workhardCtx, ipfs]);
 

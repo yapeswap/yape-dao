@@ -82,14 +82,11 @@ export const CreateLock: React.FC<CreateLockProps> = ({ stakedAmount }) => {
   useEffect(() => {
     if (!!account && !!workhardCtx) {
       const { vision, votingEscrow } = workhardCtx.dao;
-      vision
-        .balanceOf(account)
-        .then(setTokenBalance)
-        .catch(errorHandler(addToast));
+      vision.balanceOf(account).then(setTokenBalance).catch(console.error);
       vision
         .allowance(account, votingEscrow.address)
         .then(setAllowance)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
     }
   }, [account, workhardCtx, txStatus, blockNumber, addToast]);
 

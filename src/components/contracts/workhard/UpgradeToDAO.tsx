@@ -98,7 +98,7 @@ export const UpgradeToDAO: React.FC<{
   useEffect(() => {
     if (workhardCtx && id) {
       const { project } = workhardCtx;
-      project.ownerOf(id).then(setProjectOwner).catch(errorHandler(addToast));
+      project.ownerOf(id).then(setProjectOwner).catch(console.error);
     }
   }, [workhardCtx, id, blockNumber, history.location]);
 

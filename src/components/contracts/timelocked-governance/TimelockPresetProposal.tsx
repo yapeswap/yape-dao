@@ -45,7 +45,7 @@ export const TimelockPresetProposal: React.FC<Preset> = ({
         .then((_delay) => {
           setDelay(_delay.toNumber());
         })
-        .catch(errorHandler(addToast));
+        .catch(console.error);
     }
   }, [account, workhardCtx, txStatus]);
 

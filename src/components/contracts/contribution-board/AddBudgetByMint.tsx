@@ -50,15 +50,15 @@ export const AddBudgetByMint: React.FC<AddBudgetByMintProps> = ({
   useEffect(() => {
     if (!!account && !!workhardCtx && !!token) {
       const erc20 = IERC20__factory.connect(token, library);
-      erc20.balanceOf(account).then(setBalance).catch(errorHandler(addToast));
+      erc20.balanceOf(account).then(setBalance).catch(console.error);
       erc20
         .allowance(account, workhardCtx.dao.contributionBoard.address)
         .then(setAllowance)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
       workhardCtx.dao.contributionBoard
         .approvedProjects(projId)
         .then(setProjectApproved)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
     }
   }, [account, token, txStatus]);
 

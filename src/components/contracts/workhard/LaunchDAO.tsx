@@ -70,15 +70,15 @@ export const LaunchDAO: React.FC<{
   useEffect(() => {
     if (workhardCtx && id) {
       const { project, dao } = workhardCtx;
-      project.ownerOf(id).then(setProjectOwner).catch(errorHandler(addToast));
-      project.nameOf(id).then(setProjectName).catch(errorHandler(addToast));
+      project.ownerOf(id).then(setProjectOwner).catch(console.error);
+      project.nameOf(id).then(setProjectName).catch(console.error);
       dao.visionEmitter
         .FOUNDER_SHARE_DENOMINATOR()
         .then(setFounderShareDenominator)
-        .catch(errorHandler(addToast));
-      dao.vision.symbol().then(setVisionSymbol).catch(errorHandler(addToast));
-      dao.commit.symbol().then(setCommitSymbol).catch(errorHandler(addToast));
-      project.growth(id).then(setGrowth).catch(errorHandler(addToast));
+        .catch(console.error);
+      dao.vision.symbol().then(setVisionSymbol).catch(console.error);
+      dao.commit.symbol().then(setCommitSymbol).catch(console.error);
+      project.growth(id).then(setGrowth).catch(console.error);
     }
   }, [workhardCtx, id]);
 

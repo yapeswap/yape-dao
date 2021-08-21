@@ -108,7 +108,7 @@ export const Pay: React.FC<PayProps> = ({ projId, projectOwner, fund }) => {
       contributionBoard
         .projectFund(projId)
         .then(setBalance)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
     }
   }, [txStatus, blockNumber, workhardCtx]);
 

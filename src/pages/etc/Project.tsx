@@ -108,15 +108,12 @@ export const Project: React.FC = () => {
         .then(async (uri) => {
           setMeatadata(await fetchProjectMetadataFromIPFS(ipfs, uri));
         })
-        .catch(errorHandler(addToast));
-      contributionBoard
-        .projectFund(id)
-        .then(setFund)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
+      contributionBoard.projectFund(id).then(setFund).catch(console.error);
       contributionBoard
         .minimumShare(id)
         .then(setMinimumShare)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
     }
   }, [workhardCtx, ipfs, account, chainId]); // ensures refresh if referential identity of library doesn't change across chainIds
 
@@ -125,15 +122,15 @@ export const Project: React.FC = () => {
       workhardCtx.dao.contributionBoard
         .getStreams(id)
         .then(setStreams)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
       workhardCtx.dao.contributionBoard
         .getContributors(id)
         .then(setContributors)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
       workhardCtx.dao.contributionBoard
         .totalSupplyOf(id)
         .then(setTotalContribution)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
     }
   }, [workhardCtx]);
 

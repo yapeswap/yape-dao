@@ -86,31 +86,31 @@ const Dashboard = () => {
             currentWeek: currentWeek.toNumber(),
           });
         })
-        .catch(errorHandler(addToast));
+        .catch(console.error);
       workhardCtx.dao.visionEmitter
         .emissionStarted()
         .then((num) => setEmissionStarted(num.toNumber()))
-        .catch(errorHandler(addToast));
+        .catch(console.error);
       workhardCtx.dao.stableReserve
         .mintable()
         .then(setMintable)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
       workhardCtx.dao.baseCurrency
         .symbol()
         .then(setBaseCurrencySymbol)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
       workhardCtx.dao.vision
         .totalSupply()
         .then(setVisionSupply)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
       workhardCtx.dao.right
         .totalSupply()
         .then(setRightSupply)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
       workhardCtx.dao.commit
         .totalBurned()
         .then(setBurnedCommit)
-        .catch(errorHandler(addToast));
+        .catch(console.error);
     }
   }, [workhardCtx, daoId]);
 
@@ -122,7 +122,7 @@ const Dashboard = () => {
         .then(async (uri) => {
           setMetadata(await fetchProjectMetadataFromIPFS(ipfs, uri));
         })
-        .catch(errorHandler(addToast));
+        .catch(console.error);
     }
   }, [workhardCtx, daoId, ipfs]);
 

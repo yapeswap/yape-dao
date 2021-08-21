@@ -71,7 +71,7 @@ export const ProposeTx: React.FC<ProposeTxProps> = ({}) => {
           setStartsIn(BigNumber.from(_minimumPending || 0).toNumber());
           setVotingPeriod(BigNumber.from(_minimumVotingPeriod || 0).toNumber());
         })
-        .catch(errorHandler(addToast));
+        .catch(console.error);
       library
         .getBlock(blockNumber)
         .then((block) => setTimestamp(block.timestamp));
@@ -79,10 +79,7 @@ export const ProposeTx: React.FC<ProposeTxProps> = ({}) => {
   }, [account, dao, txStatus, blockNumber]);
   useEffect(() => {
     if (!!account && !!dao) {
-      dao.right
-        .balanceOf(account)
-        .then(setMyVotes)
-        .catch(errorHandler(addToast));
+      dao.right.balanceOf(account).then(setMyVotes).catch(console.error);
     }
   }, [blockNumber]);
 

@@ -20,10 +20,7 @@ export const RightBalance: React.FC<RightBalanceProps> = ({}) => {
   useEffect(() => {
     if (!!account && !!workhardCtx) {
       const { right } = workhardCtx.dao;
-      right
-        .balanceOf(account)
-        .then(setRightBalance)
-        .catch(errorHandler(addToast));
+      right.balanceOf(account).then(setRightBalance).catch(console.error);
     }
   }, [account, workhardCtx, blockNumber]);
 
