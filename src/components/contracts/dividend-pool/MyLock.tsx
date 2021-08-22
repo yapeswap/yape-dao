@@ -284,8 +284,8 @@ export const MyLock: React.FC<MyLockProps> = ({ index, lockId }) => {
                 </InputGroup.Append>
               </InputGroup>
               <Form.Text>
-                You can add {formatEther(tokenBalance || 0)} $VISION to this
-                lock.
+                You can add {formatEther(tokenBalance || 0)}{" "}
+                {workhardCtx?.metadata.visionSymbol || "$VISION"} to this lock.
               </Form.Text>
               <ConditionalButton
                 whyDisabled={
