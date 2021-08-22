@@ -468,7 +468,7 @@ export const ProductPage: React.FC = () => {
                 descriptionURI ||
                 description ||
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-              image: "QmNmA284uLXBPHtRrdBLwFq6D6jpqKjbj26qCRuD25C6DC",
+              image: "QmXWzP1cGHqJaiHW3HKZzsHE4coqATEodHLp8z3JrDChKr",
             }}
           />
         </Col>

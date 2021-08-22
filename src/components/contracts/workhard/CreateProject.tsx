@@ -97,7 +97,7 @@ export const CreateProject: React.FC<{
       uploadMetadataToIPFS(
         title,
         description,
-        "QmZ6WAhrUArQPQHQZFJBaQnHDcu5MhcrnfyfX4uwLHWMj1",
+        "QmXWzP1cGHqJaiHW3HKZzsHE4coqATEodHLp8z3JrDChKr",
         url
       )
         .then((uri) => {

@@ -146,7 +146,7 @@ export const Project: React.FC = () => {
                   style={{ borderRadius: 0 }}
                   src={uriToURL(
                     metadata?.image ||
-                      "QmZ6WAhrUArQPQHQZFJBaQnHDcu5MhcrnfyfX4uwLHWMj1"
+                      "QmXWzP1cGHqJaiHW3HKZzsHE4coqATEodHLp8z3JrDChKr"
                   )}
                 />
               </Card>

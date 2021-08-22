@@ -269,7 +269,7 @@ export const UpdateDAO: React.FC<{
                     ? previewURL
                     : uriToURL(
                         imageURI ||
-                          "QmZ6WAhrUArQPQHQZFJBaQnHDcu5MhcrnfyfX4uwLHWMj1"
+                          "QmXWzP1cGHqJaiHW3HKZzsHE4coqATEodHLp8z3JrDChKr"
                       )
                 }
               />

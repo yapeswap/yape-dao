@@ -96,7 +96,7 @@ export const ProjectDetails: React.FC = () => {
                   previewImg ||
                   (metadata
                     ? uriToURL(metadata.image)
-                    : process.env.PUBLIC_URL + "/images/daily-life.jpeg")
+                    : process.env.PUBLIC_URL + "/images/lucy.png")
                 }
                 style={{ maxWidth: "100%" }}
               />

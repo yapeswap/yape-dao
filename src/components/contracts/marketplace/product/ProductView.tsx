@@ -195,7 +195,7 @@ const getImagePath = (
   const path =
     metadata?.image ||
     preview?.image ||
-    "QmUob9cf3KuhESGg1x4cr1SGVxH1Tg5mXxpbhWXX7FrQ4n";
+    "QmXWzP1cGHqJaiHW3HKZzsHE4coqATEodHLp8z3JrDChKr";
   try {
     const cid = new CID(path);
     return uriToURL(path);

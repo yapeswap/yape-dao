@@ -334,7 +334,7 @@ export const Manufacture: React.FC = () => {
               image:
                 imageURI ||
                 previewURL ||
-                "QmUob9cf3KuhESGg1x4cr1SGVxH1Tg5mXxpbhWXX7FrQ4n",
+                "QmXWzP1cGHqJaiHW3HKZzsHE4coqATEodHLp8z3JrDChKr",
             }}
           />
         </Col>

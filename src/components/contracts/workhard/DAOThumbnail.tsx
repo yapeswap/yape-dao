@@ -77,7 +77,7 @@ export const DAOThumbnail: React.FC<DAOThumbnailProps> = ({
               <Card.Img
                 style={{ borderRadius: 0 }}
                 src={uriToURL(
-                  imageURI || "QmZ6WAhrUArQPQHQZFJBaQnHDcu5MhcrnfyfX4uwLHWMj1"
+                  imageURI || "QmXWzP1cGHqJaiHW3HKZzsHE4coqATEodHLp8z3JrDChKr"
                 )}
               />
             </Card>

@@ -60,14 +60,14 @@ const Dashboard = () => {
   const [veAPY, setVeAPY] = useState<number[]>();
 
   useEffect(() => {
-    if (daoId === 0) {
+    if (daoId === 3) {
       // fast load for master dao
       setMetadata({
-        name: "Work Hard Finance",
+        name: "Yapesswap DAO",
         description:
-          "Work Hard Finance empowers contributors with the choice to be compensated now, in stablecoins, or in the future via liquid stock options. No more stressful haggling over what’s fair — your compensation, in your hands, real time.",
-        image: "ipfs://QmPj8nm5d9hPVp7te9qiAWYvDkdnQaz1uNgU9mxN5ym5Ei",
-        url: "https://workhard.finance",
+          "Yapeswap is a new AMM concept that enables users to get more yield by investing the idle token reserves in liquidity pools into other yield farming or aggregator services like Yearn Finance.",
+        image: "ipfs://QmXWzP1cGHqJaiHW3HKZzsHE4coqATEodHLp8z3JrDChKr",
+        url: "https://yape.exchange",
       });
     }
     if (workhardCtx) {
