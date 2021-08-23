@@ -280,7 +280,10 @@ export const errorHandler = (
   fn?: (_err?: Error) => void
 ) => (err: Error) => {
   let errMsg: string;
-  if ((err as any).error) {
+  if ((err as any).code === -32000) {
+    // metamask internal error
+    return;
+  } else if ((err as any).error) {
     errMsg = `${(err as any).reason} - ${(err as any).error.message}`;
   } else if ((err as any).data?.message) {
     errMsg = (err as any).data?.message;

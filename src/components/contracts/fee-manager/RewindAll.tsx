@@ -10,7 +10,11 @@ import { useToasts } from "react-toast-notifications";
 import { YAPE_REBALANCER } from "../../../constants";
 import { useStores } from "../../../hooks/user-stores";
 import { useBlockNumber } from "../../../providers/BlockNumberProvider";
-import { handleTransaction, TxStatus } from "../../../utils/utils";
+import {
+  errorHandler,
+  handleTransaction,
+  TxStatus,
+} from "../../../utils/utils";
 import { ConditionalButton } from "../../ConditionalButton";
 
 export const RewindAll: React.FC<{
@@ -31,7 +35,9 @@ export const RewindAll: React.FC<{
       tokens.map((token) =>
         ERC20__factory.connect(token, library).balanceOf(feeManager)
       )
-    ).then(setBalances);
+    )
+      .then(setBalances)
+      .catch(errorHandler(addToast));
   }, [tokens, library, blockNumber, txStatus]);
 
   const usdFormatter = new Intl.NumberFormat("en-US", {

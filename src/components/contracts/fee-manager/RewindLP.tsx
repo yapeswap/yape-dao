@@ -12,6 +12,7 @@ import { useStores } from "../../../hooks/user-stores";
 import { useBlockNumber } from "../../../providers/BlockNumberProvider";
 import { useWorkhard } from "../../../providers/WorkhardProvider";
 import {
+  errorHandler,
   getTokenLogo,
   getTokenSymbol,
   handleTransaction,
@@ -82,7 +83,8 @@ export const RewindLP: React.FC<{
       .then((result: any) => {
         setYield0(result.yield0);
         setYield1(result.yield1);
-      });
+      })
+      .catch(errorHandler(addToast));
   }, [lpToken, library, blockNumber]);
 
   const rewind = async () => {
