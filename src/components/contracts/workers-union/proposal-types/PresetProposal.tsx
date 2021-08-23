@@ -84,11 +84,11 @@ export const PresetProposal: React.FC<Preset> = ({
           setStartsIn(BigNumber.from(_minimumPending || 0).toNumber());
           setVotingPeriod(BigNumber.from(_minimumVotingPeriod || 0).toNumber());
         })
-        .catch(console.error);
+        .catch(errorHandler(addToast));
       library
         .getBlock(blockNumber)
         .then((block) => setTimestamp(block.timestamp))
-        .catch(console.error);
+        .catch(errorHandler(addToast));
     }
   }, [account, dao, txStatus]);
   useEffect(() => {
@@ -97,7 +97,7 @@ export const PresetProposal: React.FC<Preset> = ({
       workersUnion
         .getVotesAt(account, timestamp)
         .then(setMyVotes)
-        .catch(console.error);
+        .catch(errorHandler(addToast));
     }
   }, [blockNumber, timestamp]);
   const handleSubmit: FormEventHandler = async (event) => {

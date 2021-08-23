@@ -36,7 +36,10 @@ export const Claim: React.FC<ClaimProps> = ({}) => {
 
   useEffect(() => {
     if (!!dao && !!account) {
-      dao.dividendPool.distributedTokens().then(setTokens).catch(console.error);
+      dao.dividendPool
+        .distributedTokens()
+        .then(setTokens)
+        .catch(errorHandler(addToast));
     }
   }, [account, dao, lastTx]);
 

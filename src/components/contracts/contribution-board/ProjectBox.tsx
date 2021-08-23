@@ -43,13 +43,16 @@ export const ProjectBox: React.FC<ProjectProps> = ({ projId, active }) => {
         .then(async (uri) => {
           setMeatadata(await fetchProjectMetadataFromIPFS(ipfs, uri));
         })
-        .catch(console.error);
-      contributionBoard.projectFund(projId).then(setFund).catch(console.error);
+        .catch(errorHandler(addToast));
+      contributionBoard
+        .projectFund(projId)
+        .then(setFund)
+        .catch(errorHandler(addToast));
 
       contributionBoard
         .minimumShare(projId)
         .then(setMinimumShare)
-        .catch(console.error);
+        .catch(errorHandler(addToast));
       workhardCtx.project.ownerOf(projId).then((owner) => {
         setBudgetOwner(owner);
         const network = getNetworkName(chainId);

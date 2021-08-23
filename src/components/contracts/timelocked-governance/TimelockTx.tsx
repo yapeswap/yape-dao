@@ -91,7 +91,7 @@ export const TimelockTx: React.FC<TimelockTxProps> = ({
           .then((block) => {
             setTimestamp(block.timestamp);
           })
-          .catch(console.error);
+          .catch(errorHandler(addToast));
         if (tx.to) {
           let proposer: TxProposer | undefined;
           let forced: boolean | undefined;
@@ -348,7 +348,7 @@ export const TimelockTx: React.FC<TimelockTxProps> = ({
             }
           }
         })
-        .catch(console.error);
+        .catch(errorHandler(addToast));
     }
   }, [account, workhardCtx, scheduledTx, lastTx]);
 

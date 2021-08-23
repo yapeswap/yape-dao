@@ -319,7 +319,7 @@ export const handleTransaction = (
         })
         .catch((err) => {
           setTxStatus(TxStatus.REVERTED);
-          console.error(err);
+          errorHandler(addToast)(err);
         });
     })
     .catch(errorHandler(addToast, "Cancelled"));
@@ -468,7 +468,7 @@ export const safeTxHandler = async (
       .then(() => {
         callback && callback();
       })
-      .catch(console.error);
+      .catch(errorHandler(addToast));
   }
 };
 

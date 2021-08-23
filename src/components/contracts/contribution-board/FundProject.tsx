@@ -41,11 +41,11 @@ export const FundProject: React.FC<FundProjectProps> = ({
       workhardCtx.dao.commit
         .balanceOf(account)
         .then(setBalance)
-        .catch(console.error);
+        .catch(errorHandler(addToast));
       workhardCtx.dao.commit
         .allowance(account, workhardCtx.dao.contributionBoard.address)
         .then(setAllowance)
-        .catch(console.error);
+        .catch(errorHandler(addToast));
     }
   }, [account, workhardCtx, txStatus]);
 

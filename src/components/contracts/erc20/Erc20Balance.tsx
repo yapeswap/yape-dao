@@ -35,7 +35,7 @@ export const Erc20Balance: React.FC<Erc20BalanceProps> = ({
       ERC20__factory.connect(address, library)
         .balanceOf(account)
         .then(setBalance)
-        .catch(console.error);
+        .catch(errorHandler(addToast));
       ERC20__factory.connect(address, library).symbol().then(setSymbol);
     }
   }, [account, address, library, blockNumber]);

@@ -88,11 +88,11 @@ export const BuyCommit: React.FC<BuyCommitProps> = observer(({ style }) => {
       baseCurrency
         .balanceOf(account)
         .then(store.setDaiBalance)
-        .catch(console.error);
+        .catch(errorHandler(addToast));
       baseCurrency
         .allowance(account, workhardCtx.dao.stableReserve.address)
         .then(store.setAllowance)
-        .catch(console.error);
+        .catch(errorHandler(addToast));
     }
   }, [account, workhardCtx, approveTxStatus, blockNumber]);
 

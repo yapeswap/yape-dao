@@ -84,13 +84,22 @@ export const MyLock: React.FC<MyLockProps> = ({ index, lockId }) => {
   useEffect(() => {
     if (!!account && !!workhardCtx) {
       const { vision, dividendPool, right } = workhardCtx.dao;
-      vision.balanceOf(account).then(setTokenBalance).catch(console.error);
-      dividendPool.getCurrentEpoch().then(setCurrentEpoch).catch(console.error);
+      vision
+        .balanceOf(account)
+        .then(setTokenBalance)
+        .catch(errorHandler(addToast));
+      dividendPool
+        .getCurrentEpoch()
+        .then(setCurrentEpoch)
+        .catch(errorHandler(addToast));
       vision
         .allowance(account, dividendPool.address)
         .then(setAllowance)
-        .catch(console.error);
-      right.balanceOfLock(lockId).then(setRightBalance).catch(console.error);
+        .catch(errorHandler(addToast));
+      right
+        .balanceOfLock(lockId)
+        .then(setRightBalance)
+        .catch(errorHandler(addToast));
     }
   }, [account, workhardCtx, txStatus, blockNumber]);
 

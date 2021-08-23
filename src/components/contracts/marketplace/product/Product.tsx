@@ -43,8 +43,11 @@ export const Product: React.FC<ProductProps> = ({ tokenId, uri }) => {
       commit
         .allowance(account, dao.marketplace.address)
         .then(setAllowance)
-        .catch(console.error);
-      dao.marketplace.products(tokenId).then(setProduct).catch(console.error);
+        .catch(errorHandler(addToast));
+      dao.marketplace
+        .products(tokenId)
+        .then(setProduct)
+        .catch(errorHandler(addToast));
     }
   }, [account, dao, blockNumber, approveTx]);
 

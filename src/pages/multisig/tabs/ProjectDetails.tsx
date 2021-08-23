@@ -43,14 +43,14 @@ export const ProjectDetails: React.FC = () => {
       workhardCtx.project
         .immortalized(projId)
         .then(setImmortalized)
-        .catch(console.error);
+        .catch(errorHandler(addToast));
 
       workhardCtx.project
         .tokenURI(projId)
         .then(async (uri) => {
           setMetadata(await fetchProjectMetadataFromIPFS(ipfs, uri));
         })
-        .catch(console.error);
+        .catch(errorHandler(addToast));
     }
   }, [workhardCtx, daoId, ipfs]);
 
@@ -59,13 +59,15 @@ export const ProjectDetails: React.FC = () => {
       workhardCtx.project
         .ownerOf(daoId)
         .then(setProjectOwner)
-        .catch(console.error);
+        .catch(errorHandler(addToast));
     }
   }, [workhardCtx]);
 
   useEffect(() => {
     if (preview?.file) {
-      getPreviewFromFile(preview.file).then(setPreviewImg).catch(console.error);
+      getPreviewFromFile(preview.file)
+        .then(setPreviewImg)
+        .catch(errorHandler(addToast));
     }
   }, [preview?.file]);
 

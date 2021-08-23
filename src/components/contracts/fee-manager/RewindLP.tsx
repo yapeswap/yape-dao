@@ -58,7 +58,7 @@ export const RewindLP: React.FC<{
     if (workhardCtx && lpToken) {
       getTokenSymbol(lpToken, TokenType.ERC20, workhardCtx.web3.library)
         .then(setTokenSymbol)
-        .catch(console.error);
+        .catch(errorHandler(addToast));
     }
   }, [workhardCtx, lpToken]);
 

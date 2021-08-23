@@ -53,7 +53,7 @@ export const ContributorChart: React.FC<ERC1155HolderChartProps> = ({ id }) => {
             VisionEmitter__factory.connect(contracts.visionEmitter, library)
               .initialContributorShare()
               .then(setShareAddress)
-              .catch(console.error);
+              .catch(errorHandler(addToast));
           }
         })
         .catch(() => {
@@ -71,7 +71,7 @@ export const ContributorChart: React.FC<ERC1155HolderChartProps> = ({ id }) => {
       contributionBoard
         .getContributors(id)
         .then(setContributors)
-        .catch(console.error);
+        .catch(errorHandler(addToast));
     }
   }, [library, shareAddress, blockNumber]);
 
@@ -87,7 +87,7 @@ export const ContributorChart: React.FC<ERC1155HolderChartProps> = ({ id }) => {
         )
       )
         .then(setBalances)
-        .catch(console.error);
+        .catch(errorHandler(addToast));
     }
   }, [library, shareAddress, contributors, blockNumber]);
   const COLORS = [

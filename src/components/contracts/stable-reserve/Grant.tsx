@@ -44,7 +44,7 @@ export const Grant: React.FC<GrantProps> = ({ projId }) => {
       workhardCtx.dao.stableReserve
         .mintable()
         .then(setMintable)
-        .catch(console.error);
+        .catch(errorHandler(addToast));
     }
   }, [account, workhardCtx?.dao, blockNumber]);
 

@@ -57,11 +57,11 @@ export const Allocation = () => {
       workhardCtx.dao.visionEmitter
         .emissionWeight()
         .then(setEmissionWeight)
-        .catch(console.error);
+        .catch(errorHandler(addToast));
       workhardCtx.dao.visionEmitter
         .FOUNDER_SHARE_DENOMINATOR()
         .then(setFounderShareDenom)
-        .catch(console.error);
+        .catch(errorHandler(addToast));
       workhardCtx.dao.visionEmitter
         .getNumberOfPools()
         .then(async (num) => {
@@ -112,7 +112,7 @@ export const Allocation = () => {
             })
           );
         })
-        .catch(console.error);
+        .catch(errorHandler(addToast));
     }
   }, [workhardCtx, library]);
 

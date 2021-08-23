@@ -48,11 +48,11 @@ export const MiningPool: React.FC<MiningPoolProps> = (props) => {
       workhardCtx.dao.visionEmitter
         .poolTypes(props.poolAddress)
         .then((sigHash) => setPoolType(sigHash as PoolTypeHash))
-        .catch(console.error);
+        .catch(errorHandler(addToast));
       MiningPool__factory.connect(props.poolAddress, workhardCtx.web3.library)
         .baseToken()
         .then(setBaseToken)
-        .catch(console.error);
+        .catch(errorHandler(addToast));
     }
   }, [workhardCtx]);
 
@@ -60,7 +60,7 @@ export const MiningPool: React.FC<MiningPoolProps> = (props) => {
     if (baseToken && isAddress(baseToken) && workhardCtx) {
       getTokenType(baseToken, workhardCtx.web3.library)
         .then(setTokenType)
-        .catch(console.error);
+        .catch(errorHandler(addToast));
     }
   }, [workhardCtx, baseToken]);
 
@@ -68,7 +68,7 @@ export const MiningPool: React.FC<MiningPoolProps> = (props) => {
     if (workhardCtx && baseToken && tokenType) {
       getTokenSymbol(baseToken, tokenType, workhardCtx.web3.library)
         .then(setTokenSymbol)
-        .catch(console.error);
+        .catch(errorHandler(addToast));
     }
   }, [workhardCtx, baseToken, tokenType]);
 
