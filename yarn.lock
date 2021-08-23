@@ -5193,10 +5193,10 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@yapeswap/yape-core@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@yapeswap/yape-core/-/yape-core-1.0.0.tgz#76d220333be871219d546fcbe1f617ffe4e263a3"
-  integrity sha512-PscCHCojMnXsGey/Uj/Ta4QVmhisR3v/EhWOrocKOVchLp1izN4XUy29Tg9wrbNexza19XRK7AXehBFYYKP7VA==
+"@yapeswap/yape-core@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@yapeswap/yape-core/-/yape-core-1.0.1.tgz#aef5c555422f8e0f7fd1706eb9de3107b94dcd45"
+  integrity sha512-Q8yw6gCVZ/ZWRQElP3FUDli2wIOIw8upGO9elOm2lTkLc17TeTjA7jFk/hOo7nTufggfN152vrLxcQZ0p3pb+g==
   dependencies:
     "@openzeppelin/contracts" "4.1.0"
     "@workhard/protocol" "1.0.4"

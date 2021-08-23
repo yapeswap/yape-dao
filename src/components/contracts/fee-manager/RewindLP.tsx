@@ -1,24 +1,22 @@
 import { useWeb3React } from "@web3-react/core";
 import { ERC20__factory } from "@workhard/protocol";
 import { FeeManager__factory } from "@workhard/utils";
+import { YapeRebalancer__factory } from "@yapeswap/yape-core";
 import { BigNumber, providers } from "ethers";
-import { formatEther, formatUnits } from "ethers/lib/utils";
+import { formatEther } from "ethers/lib/utils";
 import React, { useEffect, useState } from "react";
-import { Col, Row, Form, Button, Card, Image } from "react-bootstrap";
+import { Button, Card, Image } from "react-bootstrap";
 import { useToasts } from "react-toast-notifications";
+import { YAPE_REBALANCER } from "../../../constants";
 import { useStores } from "../../../hooks/user-stores";
 import { useBlockNumber } from "../../../providers/BlockNumberProvider";
 import { useWorkhard } from "../../../providers/WorkhardProvider";
-import { PoolType } from "../../../utils/ERC165Interfaces";
 import {
-  errorHandler,
   getTokenLogo,
   getTokenSymbol,
-  getTokenType,
   handleTransaction,
   TokenType,
   TxStatus,
-  usdFormatter,
 } from "../../../utils/utils";
 import { ConditionalButton } from "../../ConditionalButton";
 
@@ -28,6 +26,8 @@ export const RewindLP: React.FC<{
 }> = ({ lpToken, feeManager }) => {
   const workhardCtx = useWorkhard();
   const [balance, setBalance] = useState<BigNumber>();
+  const [yield0, setYield0] = useState<BigNumber>();
+  const [yield1, setYield1] = useState<BigNumber>();
   const [txStatus, setTxStatus] = useState<TxStatus>();
   const [tokens, setTokens] = useState<string[]>();
   const { account, library } = useWeb3React<providers.Web3Provider>();
@@ -75,6 +75,16 @@ export const RewindLP: React.FC<{
       .then(setBalance);
   }, [lpToken, library, blockNumber]);
 
+  useEffect(() => {
+    if (!library) return;
+    YapeRebalancer__factory.connect(YAPE_REBALANCER, library)
+      .expectedRevenue(lpToken)
+      .then((result: any) => {
+        setYield0(result.yield0);
+        setYield1(result.yield1);
+      });
+  }, [lpToken, library, blockNumber]);
+
   const rewind = async () => {
     if (!account || !library || !blockNumber) {
       alert("Not connected");
@@ -89,10 +99,33 @@ export const RewindLP: React.FC<{
       `Successfully distributed!`
     );
   };
+  const rebalance = async () => {
+    if (!account || !library || !blockNumber || !tokens) {
+      alert("Not connected");
+      return;
+    }
+    const signer = library.getSigner(account);
+    const rebalancer = YapeRebalancer__factory.connect(
+      YAPE_REBALANCER,
+      library
+    );
+    handleTransaction(
+      rebalancer.connect(signer).rebalance(lpToken),
+      setTxStatus,
+      addToast,
+      `Successfully rebalanced token`
+    );
+  };
   return (
     <Card>
       <Card.Header>
-        {tokenSymbol}
+        <a
+          className="text-info"
+          href={`https://etherscan.io/address/${lpToken}`}
+          target="_blank"
+        >
+          {tokenSymbol}
+        </a>
         {tokens &&
           tokens.map((addr) => (
             <>
@@ -127,7 +160,15 @@ export const RewindLP: React.FC<{
           onClick={() => rewind()}
         >
           Rewind
-        </ConditionalButton>
+        </ConditionalButton>{" "}
+        <Button onClick={() => rebalance()}>Rebalance</Button>
+        {/* <ConditionalButton
+          enabledWhen={yield0?.gt(0) || yield1?.gt(0)}
+          whyDisabled={"Not enough balance or failed to find the path."}
+          onClick={() => rebalance1()}
+        >
+          Rebalance
+        </ConditionalButton> */}
       </Card.Body>
     </Card>
   );

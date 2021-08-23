@@ -1,11 +1,13 @@
 import { useWeb3React } from "@web3-react/core";
 import { ERC20__factory } from "@workhard/protocol";
 import { FeeManager__factory } from "@workhard/utils";
+import { YapeRebalancer__factory } from "@yapeswap/yape-core";
 import { BigNumber, providers } from "ethers";
 import { formatEther, formatUnits } from "ethers/lib/utils";
 import React, { useEffect, useState } from "react";
 import { Button, Card } from "react-bootstrap";
 import { useToasts } from "react-toast-notifications";
+import { YAPE_REBALANCER } from "../../../constants";
 import { useStores } from "../../../hooks/user-stores";
 import { useBlockNumber } from "../../../providers/BlockNumberProvider";
 import { handleTransaction, TxStatus } from "../../../utils/utils";
@@ -70,6 +72,27 @@ export const RewindAll: React.FC<{
     );
   };
 
+  const rebalanceAll = async () => {
+    if (!account || !library || !blockNumber) {
+      alert("Not connected");
+      return;
+    }
+    const signer = library.getSigner(account);
+    const pairsToRebalance = tokens;
+    // const tokensToRewind = tokens.filter(
+    //   (_, i) => balances && balances[i].gt(0)
+    // );
+    const rebalancer = YapeRebalancer__factory.connect(
+      YAPE_REBALANCER,
+      library
+    );
+    handleTransaction(
+      rebalancer.connect(signer).rebalanceAll(pairsToRebalance),
+      setTxStatus,
+      addToast,
+      `Successfully rewinded!`
+    );
+  };
   return (
     <Card>
       <Card.Body>
@@ -86,6 +109,13 @@ export const RewindAll: React.FC<{
           onClick={() => rewindAll()}
         >
           Rewind all
+        </ConditionalButton>{" "}
+        <ConditionalButton
+          enabledWhen={tokens.length > 0}
+          whyDisabled={"No lp to rebalance"}
+          onClick={() => rebalanceAll()}
+        >
+          Rebalance all
         </ConditionalButton>
       </Card.Body>
     </Card>

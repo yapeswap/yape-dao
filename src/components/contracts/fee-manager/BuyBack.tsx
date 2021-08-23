@@ -5,7 +5,7 @@ import { FeeManager__factory } from "@workhard/utils";
 import { BigNumber, Contract, providers } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import React, { useEffect, useState } from "react";
-import { Card, Col, Row } from "react-bootstrap";
+import { Card, Col, Form, Row } from "react-bootstrap";
 import { useToasts } from "react-toast-notifications";
 import { useStores } from "../../../hooks/user-stores";
 import { useBlockNumber } from "../../../providers/BlockNumberProvider";
@@ -42,6 +42,7 @@ export const BuyBack: React.FC<{
   const [price, setPrice] = useState<number>();
   const [decimal, setDecimal] = useState<number>();
   const [value, setValue] = useState<string>();
+  const [slippage, setSlippage] = useState<number>(1);
   const [route, setRoute] = useState<{
     amountIn: BigNumber;
     amountOut: BigNumber;
@@ -179,13 +180,29 @@ export const BuyBack: React.FC<{
           <br />
           {value}
         </Card.Text>
-        <ConditionalButton
-          enabledWhen={!!route}
-          whyDisabled={"Not enough balance or failed to find the path."}
-          onClick={() => swap(1)}
-        >
-          Buy-back YAPE (1% slippage)
-        </ConditionalButton>
+        <Row>
+          <Col md={8}>
+            <ConditionalButton
+              enabledWhen={!!route}
+              whyDisabled={"Not enough balance or failed to find the path."}
+              onClick={() => swap(slippage)}
+            >
+              Buy-back YAPE
+            </ConditionalButton>
+          </Col>
+          <Col md={4}>
+            <Form.Control
+              type="number"
+              min={1}
+              max={10}
+              step={1}
+              value={slippage}
+              onChange={(event) => {
+                setSlippage(parseInt(event.target.value));
+              }}
+            />
+          </Col>
+        </Row>
       </Card.Body>
     </Card>
   );
