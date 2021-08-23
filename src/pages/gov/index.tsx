@@ -1,6 +1,6 @@
 import React from "react";
 import Page from "../../layouts/Page";
-import { Tab, Tabs } from "react-bootstrap";
+import { Button, Tab, Tabs } from "react-bootstrap";
 import { TimelockTxs } from "./tabs/TimelockTxs";
 import Vote from "./tabs/Vote";
 import { EscrowAndDividend } from "./tabs/EscrowAndDividend";
@@ -50,8 +50,22 @@ const Gov: React.FC = () => {
           <TimelockTxs />
         </Tab>
         <Tab
+          eventKey="snapshot"
+          title="Offchain Voting"
+          style={{ marginTop: "1rem" }}
+          onEnter={() => history.push("/gov/snapshot")}
+        >
+          <Button
+            as={"a"}
+            href={"https://snapshot.org/#/yape.eth"}
+            target={"_blank"}
+          >
+            Go to snapshot.org
+          </Button>
+        </Tab>
+        <Tab
           eventKey="vote"
-          title="Vote"
+          title="Onchain Voting"
           style={{ marginTop: "1rem" }}
           onEnter={() => history.push("/gov/vote")}
         >
