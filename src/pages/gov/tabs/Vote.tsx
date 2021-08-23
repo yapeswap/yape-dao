@@ -9,14 +9,16 @@ import { useWeb3React } from "@web3-react/core";
 import { useBlockNumber } from "../../../providers/BlockNumberProvider";
 import { useWorkhard } from "../../../providers/WorkhardProvider";
 import { BigNumber, providers } from "ethers";
-import { altWhenEmptyList } from "../../../utils/utils";
+import { altWhenEmptyList, errorHandler } from "../../../utils/utils";
 import { useHistory } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { WorkersUnionProposal } from "./WorkersUnionProposal";
+import { useToasts } from "react-toast-notifications";
 
 const Vote: React.FC = () => {
   const { account, library, chainId } = useWeb3React<providers.Web3Provider>();
   const { blockNumber } = useBlockNumber();
+  const { addToast } = useToasts();
   const workhardCtx = useWorkhard();
   const [proposedTxs, setProposedTxs] = useState<ProposedTx[]>([]);
   const [myVotes, setMyVotes] = useState<BigNumber>();
@@ -32,9 +34,12 @@ const Vote: React.FC = () => {
       return;
     }
     const workersUnion = workhardCtx.dao.workersUnion;
-    workersUnion.votingRule().then((rule) => {
-      setQuorum(rule.minimumVotes);
-    });
+    workersUnion
+      .votingRule()
+      .then((rule) => {
+        setQuorum(rule.minimumVotes);
+      })
+      .catch(errorHandler(addToast));
   }, [library, chainId, blockNumber, workhardCtx]);
 
   useEffect(() => {
