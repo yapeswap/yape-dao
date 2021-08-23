@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouteMatch } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
 import { Container, Row } from "react-bootstrap";
@@ -6,16 +6,48 @@ import { ethers } from "ethers";
 import NavBar from "../components/nav/NavBar";
 import Footer from "../components/Footer";
 import { Menu } from "../contexts/menu";
-import { isOnTargetNetwork, getTargetNetworkName } from "../utils/utils";
+import {
+  isOnTargetNetwork,
+  getTargetNetworkName,
+  getGnosisAPI,
+} from "../utils/utils";
 import { ApeSays } from "../components/views/ApeSays";
+import { useWorkhard } from "../providers/WorkhardProvider";
+import { getAddress } from "ethers/lib/utils";
 
 export type PageProps = React.ComponentProps<any>;
 
 const Page = (props: React.ComponentProps<any>) => {
-  const { active, chainId } = useWeb3React<ethers.providers.Web3Provider>();
+  const {
+    account,
+    active,
+    chainId,
+  } = useWeb3React<ethers.providers.Web3Provider>();
+  const workhardCtx = useWorkhard();
   const targetNetwork = getTargetNetworkName();
   const onTargetNetwork = isOnTargetNetwork(chainId);
-
+  const [hasPermission, setHasPermission] = useState<boolean>();
+  useEffect(() => {
+    if (!!workhardCtx && !!account && !!chainId) {
+      const gnosisAPI = getGnosisAPI(chainId);
+      if (gnosisAPI) {
+        fetch(gnosisAPI + `safes/${workhardCtx.dao.multisig.address}/`)
+          .then(async (response) => {
+            const result = await response.json();
+            if (
+              (result.owners as string[])
+                .map(getAddress)
+                .includes(getAddress(account))
+            ) {
+              setHasPermission(true);
+            }
+          })
+          .catch((_) => {
+            setHasPermission(false);
+          });
+      }
+    }
+  }, [workhardCtx, account, chainId]);
   const match = useRouteMatch<{ daoId?: string }>("/:daoId?/");
   const parsed = parseInt(match?.params.daoId || "0");
   const daoId = Number.isNaN(parsed) ? 0 : parsed;
@@ -86,7 +118,11 @@ const Page = (props: React.ComponentProps<any>) => {
         paddingTop: "98px",
       }}
     >
-      <NavBar menus={menus} secondary={secondary} adminMenus={adminMenus} />
+      <NavBar
+        menus={menus}
+        secondary={secondary}
+        adminMenus={hasPermission ? adminMenus : undefined}
+      />
       <Row>
         <Container>
           {!active && <ApeSays say={"Ape Connect Strong"} />}
