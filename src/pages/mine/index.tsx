@@ -262,7 +262,7 @@ const Mine = observer(() => {
                 : "$VISION"}{" "}
               through COMMIT MINING.
               <a
-                href="https://whf.gitbook.io/docs/mine#needs-updated"
+                href="https://docs.yape.exchange/tokenomics/tokens#usdcyape"
                 className="text-info"
               >
                 (Example)
@@ -280,7 +280,7 @@ const Mine = observer(() => {
             : "$VISION"}{" "}
           to receive{" "}
           <a
-            href="https://whf.gitbook.io/docs/tokens#usdright"
+            href="https://docs.yape.exchange/tokenomics/tokens#usdveyape"
             className="text-info"
           >
             {workhardCtx && workhardCtx.daoId !== 0
