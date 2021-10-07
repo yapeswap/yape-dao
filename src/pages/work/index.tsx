@@ -26,7 +26,7 @@ const Work: React.FC = () => {
       <br />
       <hr />
       <TitleButSer
-        link="https://whf.gitbook.io/docs/work#projects"
+        link="https://docs.yape.exchange/tokenomics/tokens/work#project-board"
         hint={`Put your back into it fellow Worker! Earn some honest ${
           workhardCtx && workhardCtx.daoId !== 0
             ? `${workhardCtx.metadata.commitName}(COMMIT)`
@@ -41,12 +41,12 @@ const Work: React.FC = () => {
       <SerHelpPlz>
         <p>
           Employers{" "}
-          <a href={`https://whf.gitbook.io/docs/work#projects`} target="_blank">
+          <a href={`https://docs.yape.exchange/tokenomics/tokens/work#project-board`} target="_blank">
             post jobs
           </a>{" "}
           on the JOB BOARD and Workers get paid in{" "}
           <a
-            href={`https://whf.gitbook.io/docs/tokens#usdcommit`}
+            href={`https://docs.yape.exchange/tokenomics/tokens#usdcyape`}
             target="_blank"
           >
             {workhardCtx?.metadata.commitSymbol || `$COMMIT`}
@@ -56,7 +56,7 @@ const Work: React.FC = () => {
         <p>
           The{" "}
           <a
-            href="https://whf.gitbook.io/docs/work#stable-reserve"
+            href="https://docs.yape.exchange/tokenomics/tokens/work#stable-reserve"
             target="_blank"
           >
             STABLE RESERVE
@@ -74,7 +74,7 @@ const Work: React.FC = () => {
             mine
           </Link>{" "}
           <a
-            href="https://whf.gitbook.io/docs/tokens#usdvision"
+            href="https://docs.yape.exchange/tokenomics/tokens#usdyape"
             target="_blank"
           >
             {workhardCtx?.metadata.visionSymbol || `$VISION`}
