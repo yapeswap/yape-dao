@@ -194,7 +194,7 @@ export const BuyBack: React.FC<{
             <Form.Control
               type="number"
               min={1}
-              max={25}
+              max={99}
               step={1}
               value={slippage}
               onChange={(event) => {
